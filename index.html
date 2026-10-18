@@ -438,48 +438,71 @@ document.querySelectorAll(".btn-logout").forEach(btn => {
 });
 
 async function handleAuth() {
+  console.log("[Auth] Starting auth flow...");
+  console.log("[Auth] pendingRole in localStorage:", localStorage.getItem("kvp-pending-role"));
+
   try {
+    console.log("[Auth] Calling getRedirectResult...");
     const result = await getRedirectResult(auth);
+    console.log("[Auth] getRedirectResult:", result);
+
     if (result && result.user) {
+      console.log("[Auth] Got user from redirect:", result.user.email);
       currentUser = result.user;
       const pendingRole = localStorage.getItem("kvp-pending-role");
+      console.log("[Auth] pendingRole:", pendingRole);
+
       if (pendingRole) {
         localStorage.removeItem("kvp-pending-role");
         userProfile = { role: pendingRole, email: result.user.email, name: result.user.displayName };
+        console.log("[Auth] Saving profile:", userProfile);
         await setDoc(doc(db, "users", result.user.uid), userProfile);
+        console.log("[Auth] Profile saved, showing app for role:", pendingRole);
         showAppForRole(pendingRole);
         return;
       }
     }
   } catch (e) {
-    console.log("Redirect result error (may be normal):", e.code, e.message);
+    console.log("[Auth] Redirect error:", e);
   }
 
+  console.log("[Auth] Setting up onAuthStateChanged...");
   onAuthStateChanged(auth, async (user) => {
+    console.log("[Auth] onAuthStateChanged fired, user:", user ? user.email : "null");
+
     if (user) {
       currentUser = user;
       try {
         const pendingRole = localStorage.getItem("kvp-pending-role");
+        console.log("[Auth] pendingRole:", pendingRole);
+
         if (pendingRole) {
           localStorage.removeItem("kvp-pending-role");
           userProfile = { role: pendingRole, email: user.email, name: user.displayName };
+          console.log("[Auth] Saving profile:", userProfile);
           await setDoc(doc(db, "users", user.uid), userProfile);
+          console.log("[Auth] Profile saved");
           showAppForRole(pendingRole);
         } else {
+          console.log("[Auth] No pendingRole, reading from database...");
           const profileDoc = await getDoc(doc(db, "users", user.uid));
+          console.log("[Auth] Profile exists:", profileDoc.exists());
           if (profileDoc.exists()) {
             userProfile = profileDoc.data();
+            console.log("[Auth] Profile data:", userProfile);
             showAppForRole(userProfile.role);
           } else {
+            console.log("[Auth] No profile in database, showing role panel");
             hideAll();
             rolePanel.classList.remove("hidden");
           }
         }
       } catch (e) {
-        console.error("Auth error:", e);
+        console.error("[Auth] Error:", e);
         alert("Login error: " + e.message);
       }
     } else {
+      console.log("[Auth] No user, showing role panel");
       hideAll();
       rolePanel.classList.remove("hidden");
     }
