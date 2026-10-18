@@ -242,7 +242,7 @@ footer{text-align:center;color:var(--muted);font-weight:700;margin-top:30px;font
 <!-- Firebase SDK -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, signInWithPopup, signOut, onAuthStateChanged, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getAuth, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -304,12 +304,13 @@ const syncStatus = document.getElementById("syncStatus");
 const nameEl = document.getElementById("name");
 const clsEl = document.getElementById("cls");
 
-btnLogin.addEventListener("click", async () => {
-  try {
-    await signInWithPopup(auth, provider);
-  } catch (e) {
+btnLogin.addEventListener("click", () => {
+  signInWithRedirect(auth, provider);
+});
+
+getRedirectResult(auth).catch(e => {
+  if (e.code !== "auth/redirect-cancelled-by-user") {
     console.error("Login error:", e);
-    alert("Đăng nhập thất bại. Vui lòng thử lại.");
   }
 });
 
