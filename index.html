@@ -869,13 +869,35 @@ function renderDetailGrid() {
     `;
 
     card.querySelector(".btn-save").onclick = async (e) => {
-      const idx = e.target.dataset.i;
+      const btn = e.target;
+      const idx = btn.dataset.i;
       const comment = card.querySelector("textarea").value;
-      if (!viewingStudent.items) viewingStudent.items = {};
-      if (!viewingStudent.items[idx]) viewingStudent.items[idx] = {};
-      viewingStudent.items[idx].comment = comment;
-      await setDoc(doc(db, "progress", viewingStudent.id), viewingStudent);
-      showSync("teacherSync", "✓ Đã lưu nhận xét");
+
+      btn.textContent = "Đang lưu...";
+      btn.disabled = true;
+
+      try {
+        if (!viewingStudent.items) viewingStudent.items = {};
+        if (!viewingStudent.items[idx]) viewingStudent.items[idx] = {};
+        viewingStudent.items[idx].comment = comment;
+        await setDoc(doc(db, "progress", viewingStudent.id), viewingStudent);
+
+        btn.textContent = "✓ Đã lưu!";
+        btn.style.background = "var(--done)";
+        setTimeout(() => {
+          btn.textContent = "Lưu nhận xét";
+          btn.style.background = "";
+          btn.disabled = false;
+        }, 2000);
+      } catch (err) {
+        btn.textContent = "Lỗi!";
+        btn.style.background = "var(--record)";
+        setTimeout(() => {
+          btn.textContent = "Lưu nhận xét";
+          btn.style.background = "";
+          btn.disabled = false;
+        }, 2000);
+      }
     };
 
     grid.appendChild(card);
