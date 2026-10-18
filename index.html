@@ -437,14 +437,16 @@ document.querySelectorAll(".role-btn").forEach(btn => {
   };
 });
 
-// Login - try popup first, fallback to redirect
+// Login - sign out first to allow account selection, then sign in
 btnLogin.onclick = async () => {
   if (!selectedRole) return;
   btnLogin.textContent = "Đang đăng nhập...";
   btnLogin.disabled = true;
 
   try {
-    // Try popup first
+    // Sign out first to force account selection
+    await signOut(auth);
+    // Then sign in with popup
     const result = await signInWithPopup(auth, provider);
     if (result.user) {
       await saveUserProfile(result.user, selectedRole);
