@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -12,9 +12,7 @@
   --bg:#EAF4FF; --surface:#FFFFFF; --ink:#1B2559; --muted:#5A6690; --line:#C9DAF5;
   --watch:#7B61FF; --read:#2E7BE6; --practice:#F2A900; --record:#F25C5C; --done:#22A86B;
   --watch-soft:#EEEAFF; --read-soft:#E3EFFF; --practice-soft:#FFF3D1; --record-soft:#FFE6E6; --done-soft:#DDF6EA;
-  --shadow:#B9CDEE;
-  color-scheme:light;
-  box-sizing:border-box;
+  --shadow:#B9CDEE; color-scheme:light; box-sizing:border-box;
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
@@ -32,24 +30,21 @@ a{color:var(--read)}
 :focus-visible{outline:3px solid var(--read);outline-offset:2px;border-radius:8px}
 .hidden{display:none!important}
 
-/* Auth & Role Selection */
-.auth-panel,.role-panel{background:var(--surface);border:2px solid var(--line);border-radius:22px;padding:30px;box-shadow:0 6px 0 var(--shadow);text-align:center;max-width:420px;margin:60px auto}
-.auth-panel h2,.role-panel h2{margin:0 0 10px;font-size:28px}
-.auth-panel p,.role-panel p{color:var(--muted);margin:0 0 20px}
+.role-panel{background:var(--surface);border:2px solid var(--line);border-radius:22px;padding:30px;box-shadow:0 6px 0 var(--shadow);text-align:center;max-width:420px;margin:60px auto}
+.role-panel h2{margin:0 0 10px;font-size:28px}
+.role-panel p{color:var(--muted);margin:0 0 20px}
 .btn-google{display:inline-flex;align-items:center;gap:10px;font:inherit;font-weight:800;font-size:16px;background:#fff;color:#333;border:2px solid var(--line);border-radius:12px;padding:12px 24px;cursor:pointer;transition:box-shadow .2s}
 .btn-google:hover{box-shadow:0 4px 12px rgba(0,0,0,.15)}
+.btn-google:disabled{opacity:.5;cursor:not-allowed}
 .btn-google svg{width:20px;height:20px}
-.role-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.role-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:20px}
 .role-btn{flex:1;min-width:140px;padding:20px;border:2px solid var(--line);border-radius:16px;background:var(--surface);cursor:pointer;transition:all .2s}
 .role-btn:hover{border-color:var(--read);background:var(--read-soft)}
 .role-btn.selected{border-color:var(--done);background:var(--done-soft)}
 .role-btn .icon{font-size:40px;margin-bottom:8px}
 .role-btn .label{font-weight:800;font-size:18px}
 .role-btn .desc{font-size:13px;color:var(--muted);margin-top:4px}
-.btn-confirm{margin-top:20px;font:inherit;font-weight:800;font-size:16px;background:var(--done);color:#fff;border:none;border-radius:12px;padding:12px 32px;cursor:pointer}
-.btn-confirm:disabled{opacity:.5;cursor:not-allowed}
 
-/* User bar */
 .user-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px;flex-wrap:wrap}
 .user-info{display:flex;align-items:center;gap:10px;font-weight:700}
 .user-info img{width:36px;height:36px;border-radius:50%;border:2px solid var(--line)}
@@ -58,7 +53,6 @@ a{color:var(--read)}
 .btn-logout{font:inherit;font-size:14px;font-weight:700;background:transparent;border:2px solid var(--line);color:var(--muted);border-radius:8px;padding:6px 12px;cursor:pointer}
 .sync-status{font-size:12px;color:var(--done);font-weight:700;margin-left:8px}
 
-/* Hero */
 .hero{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:end;margin-bottom:22px}
 .hero h1{margin:0;font-size:clamp(30px,6vw,50px);line-height:1;font-weight:800}
 .hero h1 .vs{display:inline-block;background:var(--practice);color:#1B2559;border-radius:14px;padding:0 10px;transform:rotate(-6deg);margin:0 4px;font-size:.7em;vertical-align:middle}
@@ -67,7 +61,6 @@ a{color:var(--read)}
 .dates b{display:block;font-family:"Baloo 2",sans-serif;font-size:32px;line-height:1;color:var(--record)}
 .dates span{font-size:13px;color:var(--muted);font-weight:700}
 
-/* Panel */
 .panel{background:var(--surface);border:2px solid var(--line);border-radius:22px;padding:18px;box-shadow:0 6px 0 var(--shadow);margin-bottom:22px}
 .who{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:16px}
 .who label{display:flex;flex-direction:column;font-weight:800;font-size:14px;color:var(--muted);flex:1 1 200px}
@@ -81,7 +74,6 @@ a{color:var(--read)}
 .legend{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
 .legend span{font-size:13px;font-weight:800;padding:4px 8px;border-radius:999px}
 
-/* Info */
 details.info{background:var(--surface);border:2px solid var(--line);border-radius:18px;padding:4px 16px;margin-bottom:22px}
 details.info summary{cursor:pointer;font-weight:800;padding:10px 0;list-style:none}
 details.info summary::-webkit-details-marker{display:none}
@@ -94,14 +86,12 @@ details.info[open] summary::before{content:"▾ "}
 .app-box{background:var(--read-soft);border-radius:12px;padding:10px 14px;font-weight:700;margin-top:12px}
 .app-box a{color:var(--read);font-weight:800}
 
-/* Toolbar */
 .toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin-bottom:14px}
 .filters{display:flex;gap:6px;flex-wrap:wrap}
 .filters button,.ghost{font:inherit;font-weight:800;border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 14px;cursor:pointer;font-size:14px}
 .filters button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .ghost{color:var(--muted);font-size:13px}
 
-/* Cards */
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
 .card{position:relative;background:var(--surface);border:2px solid var(--line);border-radius:22px;padding:14px;box-shadow:0 5px 0 var(--shadow);display:flex;flex-direction:column;gap:10px}
 .card.complete{border-color:var(--done);box-shadow:0 5px 0 var(--done)}
@@ -137,7 +127,6 @@ textarea{width:100%;font:inherit;font-size:13px;color:var(--ink);background:var(
 .empty{grid-column:1/-1;text-align:center;color:var(--muted);font-weight:800;padding:30px}
 footer{text-align:center;color:var(--muted);font-weight:700;margin-top:30px;font-size:13px}
 
-/* Teacher Dashboard */
 .dashboard{margin-bottom:22px}
 .dash-header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:16px}
 .dash-header h2{margin:0;font-size:24px}
@@ -153,7 +142,6 @@ footer{text-align:center;color:var(--muted);font-weight:700;margin-top:30px;font
 .chart-bar .seg{height:100%;transition:width .3s}
 .chart-bar .seg.done{background:var(--done)}
 .chart-bar .seg.progress{background:var(--practice)}
-.chart-bar .seg.notstart{background:var(--line)}
 .leaderboard{background:var(--surface);border:2px solid var(--line);border-radius:16px;overflow:hidden;margin-bottom:20px}
 .leaderboard-header{background:var(--practice-soft);padding:12px 16px;font-weight:800}
 .leaderboard-row{display:flex;align-items:center;gap:12px;padding:10px 16px;border-top:1px solid var(--line);cursor:pointer}
@@ -199,22 +187,22 @@ footer{text-align:center;color:var(--muted);font-weight:700;margin-top:30px;font
 <!-- Role Selection + Login -->
 <div id="rolePanel" class="role-panel">
   <h2>🎤 Kids vs Phonics</h2>
-  <p>Chọn vai trò của bạn</p>
+  <p>Choose your role to continue</p>
   <div class="role-btns">
     <div class="role-btn" data-role="parent">
       <div class="icon">👨‍👩‍👧</div>
-      <div class="label">Phụ huynh</div>
-      <div class="desc">Theo dõi tiến độ của con</div>
+      <div class="label">Parent</div>
+      <div class="desc">Track your child's progress</div>
     </div>
     <div class="role-btn" data-role="teacher">
       <div class="icon">👩‍🏫</div>
-      <div class="label">Giáo viên</div>
-      <div class="desc">Quản lý lớp học</div>
+      <div class="label">Teacher</div>
+      <div class="desc">Manage your classes</div>
     </div>
   </div>
-  <button class="btn-google" id="btnLogin" disabled style="margin-top:20px;opacity:0.5">
+  <button class="btn-google" id="btnLogin" disabled>
     <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-    Đăng nhập bằng Google
+    Sign in with Google
   </button>
 </div>
 
@@ -224,10 +212,10 @@ footer{text-align:center;color:var(--muted);font-weight:700;margin-top:30px;font
     <div class="user-info">
       <img id="parentPhoto" src="" alt="">
       <span id="parentName"></span>
-      <span class="user-role">Phụ huynh</span>
+      <span class="user-role">Parent</span>
       <span class="sync-status" id="parentSync"></span>
     </div>
-    <button class="btn-logout" id="parentLogout">Đăng xuất</button>
+    <button class="btn-logout" id="parentLogout">Sign out</button>
   </div>
 
   <header class="hero">
@@ -237,24 +225,24 @@ footer{text-align:center;color:var(--muted);font-weight:700;margin-top:30px;font
     </div>
     <div class="dates">
       <b id="daysLeft">–</b>
-      <span id="daysLabel">ngày còn lại</span><br>
-      <span>15/10 – 15/11/2026</span>
+      <span id="daysLabel">days left</span><br>
+      <span>Oct 15 – Nov 15, 2026</span>
     </div>
   </header>
 
   <section class="panel">
     <div class="who">
-      <label>Tên học sinh
-        <input id="studentName" type="text" placeholder="Tên của con">
+      <label>Student Name
+        <input id="studentName" type="text" placeholder="Your child's name">
       </label>
-      <label class="cls">Lớp
-        <select id="studentClass"><option value="">Chọn lớp</option></select>
+      <label class="cls">Class
+        <select id="studentClass"><option value="">Select class</option></select>
       </label>
     </div>
     <div class="stars" id="stars"></div>
     <div class="prog-text">
-      <span><span class="big" id="soundsDone">0</span> / 20 âm đã xong</span>
-      <span><span id="stepsDone">0</span> / 80 bước · <span id="sentDone">0</span> video đã gửi</span>
+      <span><span class="big" id="soundsDone">0</span> / 20 sounds completed</span>
+      <span><span id="stepsDone">0</span> / 80 steps · <span id="sentDone">0</span> videos sent</span>
     </div>
     <div class="legend">
       <span style="background:var(--watch-soft);color:var(--watch)">👀 Watch</span>
@@ -265,27 +253,27 @@ footer{text-align:center;color:var(--muted);font-weight:700;margin-top:30px;font
   </section>
 
   <details class="info">
-    <summary>Hướng dẫn sử dụng</summary>
+    <summary>How to use</summary>
     <ol>
-      <li><b>Watch</b> – Xem video mẫu</li>
-      <li><b>Read</b> – Đọc theo video</li>
-      <li><b>Practice</b> – Luyện tập nhiều lần</li>
-      <li><b>Record</b> – Quay video của con, dán link YouTube/Drive</li>
+      <li><b>Watch</b> – Watch the sample video</li>
+      <li><b>Read</b> – Read along with the video</li>
+      <li><b>Practice</b> – Practice multiple times</li>
+      <li><b>Record</b> – Record your child's video, paste YouTube/Drive link</li>
     </ol>
-    <p class="note-box">💚 Đây là sân chơi vui vẻ, không phải cuộc thi!</p>
-    <p class="app-box">📱 Tải app luyện Phonics miễn phí tại <a href="https://www.kidsvsphonics.com/" target="_blank">kidsvsphonics.com</a></p>
+    <p class="note-box">💚 This is a fun challenge, not a competition! Every small step counts!</p>
+    <p class="app-box">📱 Download free Phonics learning app at <a href="https://www.kidsvsphonics.com/" target="_blank">kidsvsphonics.com</a></p>
   </details>
 
   <div class="toolbar">
     <div class="filters" id="parentFilters">
-      <button type="button" data-f="all" aria-pressed="true">Tất cả</button>
-      <button type="button" data-f="todo" aria-pressed="false">Chưa xong</button>
-      <button type="button" data-f="done" aria-pressed="false">Đã xong ⭐</button>
+      <button type="button" data-f="all" aria-pressed="true">All</button>
+      <button type="button" data-f="todo" aria-pressed="false">In Progress</button>
+      <button type="button" data-f="done" aria-pressed="false">Completed ⭐</button>
     </div>
   </div>
 
   <main class="grid" id="parentGrid"></main>
-  <footer>Thầy Josh & cô Ngọc · Kids vs Phonics 2026 · <a href="https://www.kidsvsphonics.com/" target="_blank">kidsvsphonics.com</a></footer>
+  <footer>Mr. Josh & Ms. Ngoc · Kids vs Phonics 2026 · <a href="https://www.kidsvsphonics.com/" target="_blank">kidsvsphonics.com</a></footer>
 </div>
 
 <!-- Teacher App -->
@@ -294,91 +282,88 @@ footer{text-align:center;color:var(--muted);font-weight:700;margin-top:30px;font
     <div class="user-info">
       <img id="teacherPhoto" src="" alt="">
       <span id="teacherName"></span>
-      <span class="user-role teacher">Giáo viên</span>
+      <span class="user-role teacher">Teacher</span>
       <span class="sync-status" id="teacherSync"></span>
     </div>
-    <button class="btn-logout" id="teacherLogout">Đăng xuất</button>
+    <button class="btn-logout" id="teacherLogout">Sign out</button>
   </div>
 
-  <!-- Dashboard View -->
   <div id="dashboardView">
     <header class="hero">
       <div>
         <h1>Kids<span class="vs">vs</span>Phonics</h1>
-        <p class="sub">Dashboard Giáo viên 👩‍🏫</p>
+        <p class="sub">Teacher Dashboard 👩‍🏫</p>
       </div>
     </header>
 
     <div class="manage-classes panel">
-      <h3>Quản lý lớp học</h3>
+      <h3>Manage Classes</h3>
       <div class="class-list" id="classList"></div>
       <div class="add-class">
-        <input type="text" id="newClassName" placeholder="Tên lớp mới (VD: 3A1)">
-        <button id="btnAddClass">Thêm lớp</button>
+        <input type="text" id="newClassName" placeholder="New class name (e.g. 3A1)">
+        <button id="btnAddClass">Add Class</button>
       </div>
     </div>
 
     <div class="dashboard" id="dashboardContent">
       <div class="dash-header">
-        <h2>Tiến độ lớp học</h2>
-        <select class="class-select" id="dashClassSelect"><option value="">Tất cả lớp</option></select>
+        <h2>Class Progress</h2>
+        <select class="class-select" id="dashClassSelect"><option value="">All Classes</option></select>
       </div>
 
-      <div class="stats-row" id="statsRow">
-        <div class="stat-card green"><div class="num" id="statDone">0</div><div class="label">Hoàn thành</div></div>
-        <div class="stat-card yellow"><div class="num" id="statProgress">0</div><div class="label">Đang làm</div></div>
-        <div class="stat-card red"><div class="num" id="statNotStart">0</div><div class="label">Chưa bắt đầu</div></div>
-        <div class="stat-card"><div class="num" id="statTotal">0</div><div class="label">Tổng học sinh</div></div>
+      <div class="stats-row">
+        <div class="stat-card green"><div class="num" id="statDone">0</div><div class="label">Completed</div></div>
+        <div class="stat-card yellow"><div class="num" id="statProgress">0</div><div class="label">In Progress</div></div>
+        <div class="stat-card red"><div class="num" id="statNotStart">0</div><div class="label">Not Started</div></div>
+        <div class="stat-card"><div class="num" id="statTotal">0</div><div class="label">Total Students</div></div>
       </div>
 
       <div class="chart-bar" id="chartBar">
         <div class="seg done" style="width:0%"></div>
         <div class="seg progress" style="width:0%"></div>
-        <div class="seg notstart" style="width:100%"></div>
       </div>
 
       <div class="leaderboard" id="leaderboard">
-        <div class="leaderboard-header">🏆 Bảng xếp hạng</div>
+        <div class="leaderboard-header">🏆 Leaderboard</div>
       </div>
 
       <div class="toolbar">
         <div class="filters" id="teacherFilters">
-          <button type="button" data-f="all" aria-pressed="true">Tất cả</button>
-          <button type="button" data-f="done" aria-pressed="false">Hoàn thành</button>
-          <button type="button" data-f="progress" aria-pressed="false">Đang làm</button>
-          <button type="button" data-f="notstart" aria-pressed="false">Chưa bắt đầu</button>
+          <button type="button" data-f="all" aria-pressed="true">All</button>
+          <button type="button" data-f="done" aria-pressed="false">Completed</button>
+          <button type="button" data-f="progress" aria-pressed="false">In Progress</button>
+          <button type="button" data-f="notstart" aria-pressed="false">Not Started</button>
         </div>
       </div>
 
-      <table class="student-table" id="studentTable">
-        <thead><tr><th>Học sinh</th><th>Lớp</th><th>Tiến độ</th><th>Video</th></tr></thead>
+      <table class="student-table">
+        <thead><tr><th>Student</th><th>Class</th><th>Progress</th><th>Videos</th></tr></thead>
         <tbody id="studentTableBody"></tbody>
       </table>
     </div>
   </div>
 
-  <!-- Student Detail View -->
   <div id="studentDetailView" class="hidden">
-    <button class="back-btn" id="btnBackDash">← Quay lại Dashboard</button>
+    <button class="back-btn" id="btnBackDash">← Back to Dashboard</button>
     <div class="panel">
-      <h2 id="detailStudentName">Học sinh</h2>
+      <h2 id="detailStudentName">Student</h2>
       <p id="detailStudentClass" style="color:var(--muted);margin:0"></p>
       <div class="stars" id="detailStars" style="margin-top:12px"></div>
       <div class="prog-text">
-        <span><span class="big" id="detailSoundsDone">0</span> / 20 âm</span>
-        <span><span id="detailStepsDone">0</span> / 80 bước · <span id="detailSentDone">0</span> video</span>
+        <span><span class="big" id="detailSoundsDone">0</span> / 20 sounds</span>
+        <span><span id="detailStepsDone">0</span> / 80 steps · <span id="detailSentDone">0</span> videos</span>
       </div>
     </div>
     <main class="grid" id="detailGrid"></main>
   </div>
 
-  <footer>Thầy Josh & cô Ngọc · Kids vs Phonics 2026</footer>
+  <footer>Mr. Josh & Ms. Ngoc · Kids vs Phonics 2026</footer>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, signInWithPopup, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, collection, getDocs, deleteDoc, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getAuth, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, collection, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD6dh9MMTAFkPJddnnKXhgV7TaEBjAJUWM",
@@ -419,13 +404,12 @@ let teacherFilter = "all";
 let selectedClassId = "";
 let viewingStudent = null;
 
-// DOM
 const rolePanel = document.getElementById("rolePanel");
 const parentApp = document.getElementById("parentApp");
 const teacherApp = document.getElementById("teacherApp");
 const btnLogin = document.getElementById("btnLogin");
 
-// Role selection - must choose before login
+// Role selection
 let selectedRole = null;
 document.querySelectorAll(".role-btn").forEach(btn => {
   btn.onclick = () => {
@@ -433,41 +417,23 @@ document.querySelectorAll(".role-btn").forEach(btn => {
     btn.classList.add("selected");
     selectedRole = btn.dataset.role;
     btnLogin.disabled = false;
-    btnLogin.style.opacity = "1";
   };
 });
 
-// Login - save role to localStorage, sign out, then sign in
-btnLogin.onclick = async () => {
+// Login with redirect only
+btnLogin.onclick = () => {
   if (!selectedRole) return;
-  btnLogin.textContent = "Đang đăng nhập...";
-  btnLogin.disabled = true;
-
-  // Always save pending role to localStorage
   localStorage.setItem("kvp-pending-role", selectedRole);
-
-  try {
-    // Sign out first to force account selection
-    await signOut(auth);
-    // Then sign in with popup
-    await signInWithPopup(auth, provider);
-    // onAuthStateChanged will handle the rest
-  } catch (e) {
-    console.log("Popup failed:", e.code, e.message);
-    // Fallback to redirect
-    if (e.code === "auth/popup-blocked" || e.code === "auth/popup-closed-by-user" || e.code === "auth/cancelled-popup-request") {
-      signInWithRedirect(auth, provider);
-    } else {
-      localStorage.removeItem("kvp-pending-role");
-      alert("Lỗi đăng nhập: " + (e.message || e.code));
-      btnLogin.innerHTML = '<svg viewBox="0 0 24 24" style="width:20px;height:20px"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg> Đăng nhập bằng Google';
-      btnLogin.disabled = false;
-    }
-  }
+  btnLogin.textContent = "Redirecting...";
+  btnLogin.disabled = true;
+  signInWithRedirect(auth, provider);
 };
 
-// Handle redirect result (fallback) - onAuthStateChanged will handle the rest
-getRedirectResult(auth).catch(e => console.log("Redirect error:", e.code, e.message));
+// Handle redirect result
+getRedirectResult(auth).catch(e => {
+  console.log("Redirect error:", e);
+  localStorage.removeItem("kvp-pending-role");
+});
 
 document.querySelectorAll(".btn-logout").forEach(btn => {
   btn.onclick = async () => { await signOut(auth); location.reload(); };
@@ -477,30 +443,26 @@ onAuthStateChanged(auth, async (user) => {
   if (user) {
     currentUser = user;
     try {
-      // Check for pending role (from role selection before login)
       const pendingRole = localStorage.getItem("kvp-pending-role");
 
       if (pendingRole) {
-        // User just logged in with a role selection - always use this role
         localStorage.removeItem("kvp-pending-role");
         userProfile = { role: pendingRole, email: user.email, name: user.displayName };
         await setDoc(doc(db, "users", user.uid), userProfile);
         showAppForRole(pendingRole);
       } else {
-        // No pending role - check existing profile
         const profileDoc = await getDoc(doc(db, "users", user.uid));
         if (profileDoc.exists()) {
           userProfile = profileDoc.data();
           showAppForRole(userProfile.role);
         } else {
-          // No profile and no pending role - show role selection
           hideAll();
           rolePanel.classList.remove("hidden");
         }
       }
     } catch (e) {
       console.error("Auth error:", e);
-      alert("Lỗi: " + e.message);
+      alert("Error: " + e.message);
     }
   } else {
     hideAll();
@@ -558,7 +520,7 @@ async function loadClasses() {
 
 function renderClassSelect() {
   const sel = document.getElementById("studentClass");
-  sel.innerHTML = '<option value="">Chọn lớp</option>' + classes.map(c => `<option value="${c.id}">${c.name}</option>`).join("");
+  sel.innerHTML = '<option value="">Select class</option>' + classes.map(c => `<option value="${c.id}">${c.name}</option>`).join("");
   sel.value = parentState.classId || "";
 }
 
@@ -575,7 +537,7 @@ function saveParentData() {
   clearTimeout(parentSaveTimeout);
   parentSaveTimeout = setTimeout(async () => {
     await setDoc(doc(db, "progress", currentUser.uid), parentState);
-    showSync("parentSync", "✓ Đã lưu");
+    showSync("parentSync", "✓ Saved");
   }, 500);
 }
 
@@ -615,19 +577,19 @@ function renderParentGrid() {
       <div class="top">
         <div class="tile"><span class="sound${snd.length > 3 ? " long" : ""}">${snd}</span></div>
         <div class="meta">
-          <div class="no">Âm ${i + 1}</div>
-          <a href="${url}" target="_blank">▶ Video mẫu</a>
+          <div class="no">Sound ${i + 1}</div>
+          <a href="${url}" target="_blank">▶ Sample</a>
         </div>
       </div>
       <div class="steps">
         ${STEPS.map(s => `<button class="step" data-k="${s.k}" aria-pressed="${it[s.k]}"><span class="ic">${s.ic}</span>${s.label}</button>`).join("")}
       </div>
-      <input type="url" class="video-link" placeholder="Link video YouTube/Drive của con" value="${it.videoLink || ""}">
-      ${hasVideo ? `<div class="video-preview">✓ <a href="${it.videoLink}" target="_blank">Xem video</a></div>` : ""}
+      <input type="url" class="video-link" placeholder="Paste YouTube/Drive link" value="${it.videoLink || ""}">
+      ${hasVideo ? `<div class="video-preview">✓ <a href="${it.videoLink}" target="_blank">View video</a></div>` : ""}
       <div class="extra">
-        <button class="sent" aria-pressed="${it.sent}">${it.sent ? "✓ Đã gửi" : "Đã gửi nhóm?"}</button>
+        <button class="sent" aria-pressed="${it.sent}">${it.sent ? "✓ Sent to group" : "Sent to group?"}</button>
       </div>
-      ${it.comment ? `<div class="comment-box"><div class="label">💬 Nhận xét của cô:</div><div class="text">${it.comment}</div></div>` : ""}
+      ${it.comment ? `<div class="comment-box"><div class="label">💬 Teacher's comment:</div><div class="text">${it.comment}</div></div>` : ""}
     `;
 
     card.querySelectorAll(".step").forEach(b => {
@@ -641,7 +603,7 @@ function renderParentGrid() {
   });
 
   if (!shown) {
-    grid.innerHTML = `<div class="empty">${parentFilter === "done" ? 'Bắt đầu với âm "ai" nhé! 🚀' : "Hoàn thành cả 20 âm! 🎉"}</div>`;
+    grid.innerHTML = `<div class="empty">${parentFilter === "done" ? 'Start with sound "ai"! 🚀' : "All 20 sounds completed! 🎉"}</div>`;
   }
 }
 
@@ -662,9 +624,9 @@ function updateParentProgress() {
 function days() {
   const end = new Date(2026, 10, 15, 23, 59, 59), start = new Date(2026, 9, 15), now = new Date();
   const el = document.getElementById("daysLeft"), lb = document.getElementById("daysLabel");
-  if (now < start) { el.textContent = Math.ceil((start - now) / 864e5); lb.textContent = "ngày nữa bắt đầu"; }
-  else if (now > end) { el.textContent = "🏁"; lb.textContent = "đã kết thúc"; }
-  else { el.textContent = Math.ceil((end - now) / 864e5); lb.textContent = "ngày còn lại"; }
+  if (now < start) { el.textContent = Math.ceil((start - now) / 864e5); lb.textContent = "days to start"; }
+  else if (now > end) { el.textContent = "🏁"; lb.textContent = "ended"; }
+  else { el.textContent = Math.ceil((end - now) / 864e5); lb.textContent = "days left"; }
 }
 
 // ========== TEACHER ==========
@@ -712,7 +674,7 @@ function renderTeacherClasses() {
   list.querySelectorAll(".del").forEach(d => d.onclick = () => deleteClass(d.dataset.id));
 
   const sel = document.getElementById("dashClassSelect");
-  sel.innerHTML = '<option value="">Tất cả lớp</option>' + classes.map(c => `<option value="${c.id}">${c.name}</option>`).join("");
+  sel.innerHTML = '<option value="">All Classes</option>' + classes.map(c => `<option value="${c.id}">${c.name}</option>`).join("");
 }
 
 async function addNewClass() {
@@ -724,11 +686,11 @@ async function addNewClass() {
   input.value = "";
   await loadClasses();
   renderTeacherClasses();
-  showSync("teacherSync", "✓ Đã thêm lớp");
+  showSync("teacherSync", "✓ Class added");
 }
 
 async function deleteClass(id) {
-  if (!confirm("Xóa lớp này?")) return;
+  if (!confirm("Delete this class?")) return;
   await deleteDoc(doc(db, "classes", id));
   await loadClasses();
   renderTeacherClasses();
@@ -766,12 +728,10 @@ function renderDashboard() {
   const total = filtered.length || 1;
   document.querySelector(".chart-bar .done").style.width = (done / total * 100) + "%";
   document.querySelector(".chart-bar .progress").style.width = (progress / total * 100) + "%";
-  document.querySelector(".chart-bar .notstart").style.width = (notstart / total * 100) + "%";
 
-  // Leaderboard
   const sorted = [...filtered].sort((a, b) => getStudentStats(b).sounds - getStudentStats(a).sounds).slice(0, 10);
   const lb = document.getElementById("leaderboard");
-  lb.innerHTML = '<div class="leaderboard-header">🏆 Bảng xếp hạng</div>';
+  lb.innerHTML = '<div class="leaderboard-header">🏆 Leaderboard</div>';
   sorted.forEach((s, i) => {
     const stats = getStudentStats(s);
     const cls = classes.find(c => c.id === s.classId);
@@ -825,7 +785,7 @@ function showStudentDetail(studentId) {
 
   const cls = classes.find(c => c.id === viewingStudent.classId);
   document.getElementById("detailStudentName").textContent = viewingStudent.name;
-  document.getElementById("detailStudentClass").textContent = "Lớp: " + (cls?.name || "-");
+  document.getElementById("detailStudentClass").textContent = "Class: " + (cls?.name || "-");
 
   const stats = getStudentStats(viewingStudent);
   document.getElementById("detailSoundsDone").textContent = stats.sounds;
@@ -854,17 +814,17 @@ function renderDetailGrid() {
       <div class="top">
         <div class="tile"><span class="sound${snd.length > 3 ? " long" : ""}">${snd}</span></div>
         <div class="meta">
-          <div class="no">Âm ${i + 1}</div>
-          <a href="${url}" target="_blank">▶ Video mẫu</a>
+          <div class="no">Sound ${i + 1}</div>
+          <a href="${url}" target="_blank">▶ Sample</a>
         </div>
       </div>
       <div class="steps">
         ${STEPS.map(s => `<button class="step" data-k="${s.k}" aria-pressed="${it[s.k] || false}" disabled><span class="ic">${s.ic}</span>${s.label}</button>`).join("")}
       </div>
-      ${hasVideo ? `<div class="video-preview">🎬 <a href="${it.videoLink}" target="_blank">Xem video của học sinh</a></div>` : '<div style="color:var(--muted);font-size:13px">Chưa có video</div>'}
+      ${hasVideo ? `<div class="video-preview">🎬 <a href="${it.videoLink}" target="_blank">View student's video</a></div>` : '<div style="color:var(--muted);font-size:13px">No video yet</div>'}
       <div class="teacher-comment">
-        <textarea placeholder="Nhận xét cho video này...">${it.comment || ""}</textarea>
-        <button class="btn-save" data-i="${i}">Lưu nhận xét</button>
+        <textarea placeholder="Write a comment for this video...">${it.comment || ""}</textarea>
+        <button class="btn-save" data-i="${i}">Save Comment</button>
       </div>
     `;
 
@@ -873,7 +833,7 @@ function renderDetailGrid() {
       const idx = btn.dataset.i;
       const comment = card.querySelector("textarea").value;
 
-      btn.textContent = "Đang lưu...";
+      btn.textContent = "Saving...";
       btn.disabled = true;
 
       try {
@@ -882,18 +842,18 @@ function renderDetailGrid() {
         viewingStudent.items[idx].comment = comment;
         await setDoc(doc(db, "progress", viewingStudent.id), viewingStudent);
 
-        btn.textContent = "✓ Đã lưu!";
+        btn.textContent = "✓ Saved!";
         btn.style.background = "var(--done)";
         setTimeout(() => {
-          btn.textContent = "Lưu nhận xét";
+          btn.textContent = "Save Comment";
           btn.style.background = "";
           btn.disabled = false;
         }, 2000);
       } catch (err) {
-        btn.textContent = "Lỗi!";
+        btn.textContent = "Error!";
         btn.style.background = "var(--record)";
         setTimeout(() => {
-          btn.textContent = "Lưu nhận xét";
+          btn.textContent = "Save Comment";
           btn.style.background = "";
           btn.disabled = false;
         }, 2000);
