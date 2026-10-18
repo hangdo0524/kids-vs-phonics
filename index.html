@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kids vs Phonics – English Speaking Challenge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EAF4FF; --surface:#FFFFFF; --ink:#1B2559; --muted:#5A6690; --line:#C9DAF5;
+  --watch:#7B61FF; --read:#2E7BE6; --practice:#F2A900; --record:#F25C5C; --done:#22A86B;
+  --watch-soft:#EEEAFF; --read-soft:#E3EFFF; --practice-soft:#FFF3D1; --record-soft:#FFE6E6; --done-soft:#DDF6EA;
+  --shadow:#B9CDEE;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#111833; --surface:#1B2447; --ink:#EEF2FF; --muted:#A9B4DA; --line:#2E3A69;
+    --watch:#A795FF; --read:#6FA8FF; --practice:#FFCB45; --record:#FF8A8A; --done:#4CD494;
+    --watch-soft:#2B2660; --read-soft:#1D3462; --practice-soft:#3E3416; --record-soft:#4A2130; --done-soft:#173F33;
+    --shadow:#0A1026; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#111833; --surface:#1B2447; --ink:#EEF2FF; --muted:#A9B4DA; --line:#2E3A69;
+  --watch:#A795FF; --read:#6FA8FF; --practice:#FFCB45; --record:#FF8A8A; --done:#4CD494;
+  --watch-soft:#2B2660; --read-soft:#1D3462; --practice-soft:#3E3416; --record-soft:#4A2130; --done-soft:#173F33;
+  --shadow:#0A1026; color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.5}
+.wrap{max-width:1080px;margin:0 auto;padding:24px 18px 60px}
+h1,h2,h3,.sound{font-family:"Baloo 2","Nunito",system-ui,sans-serif}
+a{color:var(--read)}
+:focus-visible{outline:3px solid var(--read);outline-offset:2px;border-radius:8px}
+
+/* Hero */
+.hero{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:end;margin-bottom:22px}
+.hero h1{margin:0;font-size:clamp(34px,7vw,60px);line-height:1;font-weight:800;letter-spacing:-.5px}
+.hero h1 .vs{display:inline-block;background:var(--practice);color:#1B2559;border-radius:14px;padding:0 12px;transform:rotate(-6deg);margin:0 6px;font-size:.7em;vertical-align:middle}
+.hero p.sub{margin:8px 0 0;color:var(--muted);font-weight:700;font-size:18px}
+.dates{background:var(--surface);border:2px solid var(--line);border-radius:18px;padding:12px 16px;text-align:center;min-width:150px}
+.dates b{display:block;font-family:"Baloo 2",sans-serif;font-size:36px;line-height:1;color:var(--record)}
+.dates span{font-size:14px;color:var(--muted);font-weight:700}
+
+/* Student + progress */
+.panel{background:var(--surface);border:2px solid var(--line);border-radius:22px;padding:18px;box-shadow:0 6px 0 var(--shadow);margin-bottom:22px}
+.who{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:16px}
+.who label{display:flex;flex-direction:column;font-weight:800;font-size:14px;color:var(--muted);flex:1 1 200px}
+.who label.cls{flex:0 1 120px}
+.who input{margin-top:4px;font:inherit;font-weight:700;font-size:18px;color:var(--ink);background:var(--bg);border:2px solid var(--line);border-radius:12px;padding:8px 12px}
+.stars{display:grid;grid-template-columns:repeat(20,1fr);gap:4px;margin:6px 0 10px}
+.stars i{aspect-ratio:1;border-radius:50%;background:var(--line);display:grid;place-items:center;font-style:normal;font-size:clamp(9px,2vw,16px);transition:transform .25s}
+.stars i.on{background:var(--practice);transform:scale(1.08)}
+.prog-text{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;font-weight:800}
+.prog-text .big{font-family:"Baloo 2",sans-serif;font-size:24px}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.legend span{font-size:14px;font-weight:800;padding:4px 10px;border-radius:999px}
+
+/* Info */
+details.info{background:var(--surface);border:2px solid var(--line);border-radius:18px;padding:4px 16px;margin-bottom:22px}
+details.info summary{cursor:pointer;font-weight:800;padding:10px 0;list-style:none}
+details.info summary::-webkit-details-marker{display:none}
+details.info summary::before{content:"▸ ";color:var(--read)}
+details.info[open] summary::before{content:"▾ "}
+.info ol{padding-left:22px;margin:6px 0}
+.info li{margin-bottom:6px}
+.info p{margin:8px 0;max-width:72ch}
+.note-box{background:var(--done-soft);border-radius:12px;padding:10px 14px;font-weight:700}
+
+/* Toolbar */
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin-bottom:14px}
+.filters{display:flex;gap:6px;flex-wrap:wrap}
+.filters button,.ghost{font:inherit;font-weight:800;border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 14px;cursor:pointer}
+.filters button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.ghost{color:var(--muted);font-size:14px}
+
+/* Cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.card{position:relative;background:var(--surface);border:2px solid var(--line);border-radius:22px;padding:14px;box-shadow:0 5px 0 var(--shadow);display:flex;flex-direction:column;gap:10px}
+.card.complete{border-color:var(--done);box-shadow:0 5px 0 var(--done)}
+.top{display:flex;align-items:center;gap:12px}
+.tile{flex:0 0 auto;min-width:72px;height:72px;padding:0 10px;border-radius:16px;background:var(--read-soft);display:grid;place-items:center}
+.card.complete .tile{background:var(--done-soft)}
+.sound{font-size:34px;font-weight:800;line-height:1;text-transform:lowercase}
+.sound.long{font-size:24px}
+.meta{min-width:0}
+.meta .no{font-size:13px;font-weight:800;color:var(--muted)}
+.meta a{display:inline-block;margin-top:2px;font-weight:800;text-decoration:none;background:var(--record-soft);color:var(--record);border-radius:999px;padding:3px 10px;font-size:14px}
+.meta a:hover{text-decoration:underline}
+.stamp{position:absolute;top:-10px;right:-8px;background:var(--done);color:#fff;font-family:"Baloo 2",sans-serif;font-weight:800;border-radius:999px;padding:2px 10px;transform:rotate(8deg);font-size:14px;display:none}
+.card.complete .stamp{display:block;animation:pop .35s ease-out}
+@keyframes pop{0%{transform:rotate(8deg) scale(.3)}80%{transform:rotate(8deg) scale(1.15)}100%{transform:rotate(8deg) scale(1)}}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.step{font:inherit;cursor:pointer;border:2px solid var(--line);background:var(--bg);color:var(--muted);border-radius:12px;padding:6px 2px;display:flex;flex-direction:column;align-items:center;gap:0;font-weight:800;font-size:12px;line-height:1.2}
+.step .ic{font-size:20px;line-height:1.2;filter:grayscale(1);opacity:.55}
+.step .n{font-size:11px}
+.step[aria-pressed="true"] .ic{filter:none;opacity:1}
+.step[data-k="watch"][aria-pressed="true"]{background:var(--watch-soft);border-color:var(--watch);color:var(--watch)}
+.step[data-k="read"][aria-pressed="true"]{background:var(--read-soft);border-color:var(--read);color:var(--read)}
+.step[data-k="practice"][aria-pressed="true"]{background:var(--practice-soft);border-color:var(--practice);color:var(--ink)}
+.step[data-k="record"][aria-pressed="true"]{background:var(--record-soft);border-color:var(--record);color:var(--record)}
+.extra{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.sent{font:inherit;font-size:13px;font-weight:800;cursor:pointer;border:2px dashed var(--line);background:transparent;color:var(--muted);border-radius:999px;padding:3px 10px}
+.sent[aria-pressed="true"]{border-style:solid;border-color:var(--done);background:var(--done-soft);color:var(--done)}
+textarea{width:100%;font:inherit;font-size:14px;color:var(--ink);background:var(--bg);border:2px solid var(--line);border-radius:12px;padding:6px 10px;resize:vertical;min-height:38px}
+.empty{grid-column:1/-1;text-align:center;color:var(--muted);font-weight:800;padding:30px}
+footer{text-align:center;color:var(--muted);font-weight:700;margin-top:30px;font-size:14px}
+
+@media (max-width:620px){
+  .hero{grid-template-columns:1fr}
+  .dates{justify-self:start}
+  .stars{grid-template-columns:repeat(10,1fr)}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div>
+      <h1>Kids<span class="vs">vs</span>Phonics</h1>
+      <p class="sub">English Speaking Challenge 🎤 · Small steps, big progress!</p>
+    </div>
+    <div class="dates" aria-live="polite">
+      <b id="daysLeft">–</b>
+      <span id="daysLabel">ngày còn lại</span><br>
+      <span>15/10 – 15/11/2026</span>
+    </div>
+  </header>
+
+  <section class="panel" aria-label="Thông tin và tiến độ">
+    <div class="who">
+      <label>Student name
+        <input id="name" type="text" autocomplete="off" placeholder="Tên của con">
+      </label>
+      <label class="cls">Class
+        <input id="cls" type="text" autocomplete="off" placeholder="3A5">
+      </label>
+    </div>
+    <div class="stars" id="stars" aria-hidden="true"></div>
+    <div class="prog-text">
+      <span><span class="big" id="soundsDone">0</span> / 20 âm đã xong cả 4 bước</span>
+      <span><span id="stepsDone">0</span> / 80 bước · <span id="sentDone">0</span> video đã gửi nhóm</span>
+    </div>
+    <div class="legend">
+      <span style="background:var(--watch-soft);color:var(--watch)">1 👀 Watch – Xem video</span>
+      <span style="background:var(--read-soft);color:var(--read)">2 📖 Read – Đọc theo</span>
+      <span style="background:var(--practice-soft);color:var(--ink)">3 🔁 Practice – Luyện tập</span>
+      <span style="background:var(--record-soft);color:var(--record)">4 🎬 Record – Quay video</span>
+    </div>
+  </section>
+
+  <details class="info">
+    <summary>Thư gửi ba mẹ và cách làm</summary>
+    <p>Ba mẹ thân mến! ❤️ Thầy Josh và cô Ngọc phát động thử thách <b>Kids vs Phonics – English Speaking Challenge</b>, tạo sân chơi vui vẻ để các con khám phá Phonics and Speaking: phát âm đúng, lên giọng, xuống giọng, nhấn nhá và thể hiện cảm xúc phù hợp khi nói tiếng Anh. 🗣️✨</p>
+    <p><b>4 bước luyện tập mỗi ngày:</b></p>
+    <ol>
+      <li><b>Watch</b> – Xem video: nghe cách phát âm từ và câu, âm vần và ngữ điệu của giọng đọc mẫu.</li>
+      <li><b>Read</b> – Đọc theo video: bắt chước cách phát âm, nhấn giọng theo ngữ điệu của người nói.</li>
+      <li><b>Practice</b> – Luyện tập: đọc to nhiều lần, điều chỉnh giọng nói và thể hiện cảm xúc phù hợp.</li>
+      <li><b>Record</b> – Ghi hình: quay video đọc lại các từ và câu, phát âm rõ ràng, ngữ điệu tự nhiên, biểu cảm sinh động. 🎬</li>
+    </ol>
+    <p><b>Yêu cầu:</b> hoàn thành 20 video theo bảng dưới đây (mỗi âm có link video luyện tập trên YouTube) và gửi tất cả video lên nhóm lớp.</p>
+    <p class="note-box">💚 Đây là sân chơi luyện nói vui vẻ, không phải cuộc thi. Con không cần nói hoàn hảo ngay từ đầu. Mỗi ngày tự tin và hào hứng hơn một chút là tuyệt vời rồi! 🌈</p>
+    <p><b>Cách dùng trang này:</b> bấm vào từng ô 👀 📖 🔁 🎬 khi con làm xong bước đó. Bấm “Đã gửi nhóm” khi đã gửi video lên nhóm lớp. Tiến độ được lưu trên trình duyệt của máy này.</p>
+  </details>
+
+  <div class="toolbar">
+    <div class="filters" role="group" aria-label="Lọc">
+      <button type="button" data-f="all" aria-pressed="true">Tất cả</button>
+      <button type="button" data-f="todo" aria-pressed="false">Chưa xong</button>
+      <button type="button" data-f="done" aria-pressed="false">Đã xong ⭐</button>
+    </div>
+    <button type="button" class="ghost" id="reset">Xoá toàn bộ tiến độ</button>
+  </div>
+
+  <main class="grid" id="grid"></main>
+
+  <footer>Thầy Josh &amp; cô Ngọc · Kids vs Phonics 2026</footer>
+</div>
+
+<script>
+const SOUNDS = [
+  ["ai","https://youtu.be/_uyC7jweYj4?si=MuUUkwnhvKhLZ4Yn"],
+  ["oa","https://www.youtube.com/watch?v=LIIOWNpY4ro"],
+  ["ee","https://www.youtube.com/watch?v=HoS7G1tY-Io"],
+  ["ea","https://www.youtube.com/watch?v=Yc36_Imtiig"],
+  ["oo","https://www.youtube.com/watch?v=p2cshyu82vk"],
+  ["long oo","https://www.youtube.com/watch?v=axwBqTBJIF4"],
+  ["er","https://www.youtube.com/watch?v=xf7b2rO5iIY"],
+  ["or","https://www.youtube.com/watch?v=-48G217E0fQ"],
+  ["ar","https://www.youtube.com/watch?v=FjlEHitDGpg"],
+  ["ie","https://www.youtube.com/watch?v=nF2MaR7_J8Q"],
+  ["oi","https://www.youtube.com/watch?v=01EO7QgWyxU"],
+  ["ue","https://www.youtube.com/watch?v=QxhF1RZdAIc"],
+  ["ph","https://www.youtube.com/watch?v=DXvp4Ybx0W4"],
+  ["ch","https://www.youtube.com/watch?v=xuld36YrFYs"],
+  ["sh","https://www.youtube.com/watch?v=9q-bPLcmPnQ"],
+  ["th","https://www.youtube.com/watch?v=25HeM_ppYDk"],
+  ["ck","https://www.youtube.com/watch?v=bHR6UYef3rc"],
+  ["qu","https://www.youtube.com/watch?v=zsvzy6DoO54"],
+  ["ou","https://www.youtube.com/watch?v=vbPZbZEj7mY"],
+  ["ow","https://www.youtube.com/watch?v=HWIXnIX9yY0"]
+];
+const STEPS = [
+  {k:"watch",ic:"👀",label:"Watch"},
+  {k:"read",ic:"📖",label:"Read"},
+  {k:"practice",ic:"🔁",label:"Practice"},
+  {k:"record",ic:"🎬",label:"Record"}
+];
+const KEY = "kvp-tracker-v1";
+let state = {name:"",cls:"",items:{}};
+let filter = "all";
+
+function load(){
+  try{
+    const raw = localStorage.getItem(KEY);
+    if(raw){ const s = JSON.parse(raw); if(s && typeof s==="object") state = Object.assign(state,s); }
+  }catch(e){}
+  if(!state.items || typeof state.items!=="object") state.items = {};
+}
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+function item(i){
+  if(!state.items[i]) state.items[i] = {watch:false,read:false,practice:false,record:false,sent:false,note:""};
+  return state.items[i];
+}
+function isComplete(it){ return STEPS.every(s=>it[s.k]); }
+
+function render(){
+  const grid = document.getElementById("grid");
+  grid.innerHTML = "";
+  let shown = 0;
+  SOUNDS.forEach(([snd,url],i)=>{
+    const it = item(i);
+    const done = isComplete(it);
+    if(filter==="done" && !done) return;
+    if(filter==="todo" && done) return;
+    shown++;
+    const card = document.createElement("article");
+    card.className = "card" + (done?" complete":"");
+    card.innerHTML = `
+      <span class="stamp">Well done! ⭐</span>
+      <div class="top">
+        <div class="tile"><span class="sound${snd.length>3?" long":""}">${snd}</span></div>
+        <div class="meta">
+          <div class="no">Âm số ${i+1}</div>
+          <a href="${url}" target="_blank" rel="noopener">▶ Xem video</a>
+        </div>
+      </div>
+      <div class="steps" role="group" aria-label="4 bước cho âm ${snd}">
+        ${STEPS.map((s,n)=>`<button type="button" class="step" data-k="${s.k}" aria-pressed="${it[s.k]}">
+            <span class="ic" aria-hidden="true">${s.ic}</span><span class="n">${n+1}</span>${s.label}</button>`).join("")}
+      </div>
+      <div class="extra">
+        <button type="button" class="sent" aria-pressed="${it.sent}">${it.sent?"✓ Đã gửi nhóm":"Đã gửi nhóm?"}</button>
+      </div>
+      <textarea rows="1" placeholder="Ghi chú (ví dụ: con đọc chưa rõ từ “rain”)" aria-label="Ghi chú âm ${snd}"></textarea>`;
+    card.querySelector("textarea").value = it.note || "";
+    card.querySelectorAll(".step").forEach(b=>{
+      b.addEventListener("click",()=>{
+        it[b.dataset.k] = !it[b.dataset.k];
+        save(); render(); updateProgress();
+        const again = document.querySelector(`.card[data-i="${i}"] .step[data-k="${b.dataset.k}"]`);
+        if(again) again.focus();
+      });
+    });
+    card.querySelector(".sent").addEventListener("click",()=>{
+      it.sent = !it.sent; save(); render(); updateProgress();
+      const again = document.querySelector(`.card[data-i="${i}"] .sent`); if(again) again.focus();
+    });
+    card.querySelector("textarea").addEventListener("input",e=>{ it.note = e.target.value; save(); });
+    card.dataset.i = i;
+    grid.appendChild(card);
+  });
+  if(!shown){
+    const e = document.createElement("div");
+    e.className = "empty";
+    e.textContent = filter==="done" ? "Chưa có âm nào xong cả 4 bước. Bắt đầu với âm “ai” nhé! 🚀" : "Con đã hoàn thành cả 20 âm! Tuyệt vời! 🎉";
+    grid.appendChild(e);
+  }
+}
+
+function updateProgress(){
+  let sounds=0, steps=0, sent=0;
+  SOUNDS.forEach((_,i)=>{
+    const it = item(i);
+    if(isComplete(it)) sounds++;
+    STEPS.forEach(s=>{ if(it[s.k]) steps++; });
+    if(it.sent) sent++;
+  });
+  document.getElementById("soundsDone").textContent = sounds;
+  document.getElementById("stepsDone").textContent = steps;
+  document.getElementById("sentDone").textContent = sent;
+  const st = document.getElementById("stars");
+  st.innerHTML = SOUNDS.map((_,i)=>`<i class="${i<sounds?"on":""}">${i<sounds?"⭐":""}</i>`).join("");
+}
+
+function days(){
+  const end = new Date(2026,10,15,23,59,59);
+  const start = new Date(2026,9,15);
+  const now = new Date();
+  const el = document.getElementById("daysLeft"), lb = document.getElementById("daysLabel");
+  if(now < start){ el.textContent = Math.ceil((start-now)/864e5); lb.textContent = "ngày nữa bắt đầu"; }
+  else if(now > end){ el.textContent = "🏁"; lb.textContent = "thử thách đã kết thúc"; }
+  else { el.textContent = Math.ceil((end-now)/864e5); lb.textContent = "ngày còn lại"; }
+}
+
+document.querySelectorAll(".filters button").forEach(b=>{
+  b.addEventListener("click",()=>{
+    filter = b.dataset.f;
+    document.querySelectorAll(".filters button").forEach(x=>x.setAttribute("aria-pressed", x===b));
+    render();
+  });
+});
+document.getElementById("reset").addEventListener("click",()=>{
+  if(confirm("Xoá toàn bộ tiến độ và ghi chú của 20 âm?")){
+    state.items = {}; save(); render(); updateProgress();
+  }
+});
+const nameEl = document.getElementById("name"), clsEl = document.getElementById("cls");
+nameEl.addEventListener("input",()=>{ state.name = nameEl.value; save(); });
+clsEl.addEventListener("input",()=>{ state.cls = clsEl.value; save(); });
+
+load();
+nameEl.value = state.name || "";
+clsEl.value = state.cls || "";
+days(); render(); updateProgress();
+</script>
+</body>
+</html>
