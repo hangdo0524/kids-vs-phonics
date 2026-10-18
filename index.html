@@ -429,46 +429,63 @@ btnLogin.onclick = () => {
   signInWithRedirect(auth, provider);
 };
 
-// Handle redirect result
-getRedirectResult(auth).catch(e => {
-  console.log("Redirect error:", e);
-  localStorage.removeItem("kvp-pending-role");
-});
-
 document.querySelectorAll(".btn-logout").forEach(btn => {
-  btn.onclick = async () => { await signOut(auth); location.reload(); };
+  btn.onclick = async () => {
+    localStorage.removeItem("kvp-pending-role");
+    await signOut(auth);
+    location.reload();
+  };
 });
 
-onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    currentUser = user;
-    try {
+async function handleAuth() {
+  try {
+    const result = await getRedirectResult(auth);
+    if (result && result.user) {
+      currentUser = result.user;
       const pendingRole = localStorage.getItem("kvp-pending-role");
-
       if (pendingRole) {
         localStorage.removeItem("kvp-pending-role");
-        userProfile = { role: pendingRole, email: user.email, name: user.displayName };
-        await setDoc(doc(db, "users", user.uid), userProfile);
+        userProfile = { role: pendingRole, email: result.user.email, name: result.user.displayName };
+        await setDoc(doc(db, "users", result.user.uid), userProfile);
         showAppForRole(pendingRole);
-      } else {
-        const profileDoc = await getDoc(doc(db, "users", user.uid));
-        if (profileDoc.exists()) {
-          userProfile = profileDoc.data();
-          showAppForRole(userProfile.role);
-        } else {
-          hideAll();
-          rolePanel.classList.remove("hidden");
-        }
+        return;
       }
-    } catch (e) {
-      console.error("Auth error:", e);
-      alert("Error: " + e.message);
     }
-  } else {
-    hideAll();
-    rolePanel.classList.remove("hidden");
+  } catch (e) {
+    console.log("Redirect result error (may be normal):", e.code, e.message);
   }
-});
+
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      currentUser = user;
+      try {
+        const pendingRole = localStorage.getItem("kvp-pending-role");
+        if (pendingRole) {
+          localStorage.removeItem("kvp-pending-role");
+          userProfile = { role: pendingRole, email: user.email, name: user.displayName };
+          await setDoc(doc(db, "users", user.uid), userProfile);
+          showAppForRole(pendingRole);
+        } else {
+          const profileDoc = await getDoc(doc(db, "users", user.uid));
+          if (profileDoc.exists()) {
+            userProfile = profileDoc.data();
+            showAppForRole(userProfile.role);
+          } else {
+            hideAll();
+            rolePanel.classList.remove("hidden");
+          }
+        }
+      } catch (e) {
+        console.error("Auth error:", e);
+        alert("Login error: " + e.message);
+      }
+    } else {
+      hideAll();
+      rolePanel.classList.remove("hidden");
+    }
+  });
+}
+handleAuth();
 
 function hideAll() {
   rolePanel.classList.add("hidden");
