@@ -40,6 +40,19 @@ h1,h2,h3,.sound{font-family:"Baloo 2","Nunito",system-ui,sans-serif}
 a{color:var(--read)}
 :focus-visible{outline:3px solid var(--read);outline-offset:2px;border-radius:8px}
 
+/* Auth */
+.auth-panel{background:var(--surface);border:2px solid var(--line);border-radius:22px;padding:30px;box-shadow:0 6px 0 var(--shadow);text-align:center;max-width:400px;margin:60px auto}
+.auth-panel h2{margin:0 0 10px;font-size:28px}
+.auth-panel p{color:var(--muted);margin:0 0 20px}
+.btn-google{display:inline-flex;align-items:center;gap:10px;font:inherit;font-weight:800;font-size:16px;background:#fff;color:#333;border:2px solid var(--line);border-radius:12px;padding:12px 24px;cursor:pointer;transition:box-shadow .2s}
+.btn-google:hover{box-shadow:0 4px 12px rgba(0,0,0,.15)}
+.btn-google svg{width:20px;height:20px}
+.user-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px;flex-wrap:wrap}
+.user-info{display:flex;align-items:center;gap:10px;font-weight:700}
+.user-info img{width:36px;height:36px;border-radius:50%;border:2px solid var(--line)}
+.btn-logout{font:inherit;font-size:14px;font-weight:700;background:transparent;border:2px solid var(--line);color:var(--muted);border-radius:8px;padding:6px 12px;cursor:pointer}
+.btn-logout:hover{border-color:var(--record);color:var(--record)}
+
 /* Hero */
 .hero{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:end;margin-bottom:22px}
 .hero h1{margin:0;font-size:clamp(34px,7vw,60px);line-height:1;font-weight:800;letter-spacing:-.5px}
@@ -69,10 +82,12 @@ details.info summary{cursor:pointer;font-weight:800;padding:10px 0;list-style:no
 details.info summary::-webkit-details-marker{display:none}
 details.info summary::before{content:"▸ ";color:var(--read)}
 details.info[open] summary::before{content:"▾ "}
-.info ol{padding-left:22px;margin:6px 0}
+.info ol,.info ul{padding-left:22px;margin:6px 0}
 .info li{margin-bottom:6px}
 .info p{margin:8px 0;max-width:72ch}
 .note-box{background:var(--done-soft);border-radius:12px;padding:10px 14px;font-weight:700}
+.app-box{background:var(--read-soft);border-radius:12px;padding:10px 14px;font-weight:700;margin-top:12px}
+.app-box a{color:var(--read);font-weight:800}
 
 /* Toolbar */
 .toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin-bottom:14px}
@@ -82,7 +97,7 @@ details.info[open] summary::before{content:"▾ "}
 .ghost{color:var(--muted);font-size:14px}
 
 /* Cards */
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
 .card{position:relative;background:var(--surface);border:2px solid var(--line);border-radius:22px;padding:14px;box-shadow:0 5px 0 var(--shadow);display:flex;flex-direction:column;gap:10px}
 .card.complete{border-color:var(--done);box-shadow:0 5px 0 var(--done)}
 .top{display:flex;align-items:center;gap:12px}
@@ -109,9 +124,18 @@ details.info[open] summary::before{content:"▾ "}
 .extra{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .sent{font:inherit;font-size:13px;font-weight:800;cursor:pointer;border:2px dashed var(--line);background:transparent;color:var(--muted);border-radius:999px;padding:3px 10px}
 .sent[aria-pressed="true"]{border-style:solid;border-color:var(--done);background:var(--done-soft);color:var(--done)}
+.video-link{width:100%;font:inherit;font-size:14px;color:var(--ink);background:var(--bg);border:2px solid var(--line);border-radius:12px;padding:6px 10px}
+.video-link::placeholder{color:var(--muted)}
+.video-link:focus{border-color:var(--read)}
+.video-preview{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--done)}
+.video-preview a{color:var(--read);text-decoration:none}
+.video-preview a:hover{text-decoration:underline}
 textarea{width:100%;font:inherit;font-size:14px;color:var(--ink);background:var(--bg);border:2px solid var(--line);border-radius:12px;padding:6px 10px;resize:vertical;min-height:38px}
 .empty{grid-column:1/-1;text-align:center;color:var(--muted);font-weight:800;padding:30px}
 footer{text-align:center;color:var(--muted);font-weight:700;margin-top:30px;font-size:14px}
+.hidden{display:none!important}
+.loading{text-align:center;padding:40px;color:var(--muted);font-weight:700}
+.sync-status{font-size:12px;color:var(--done);font-weight:700}
 
 @media (max-width:620px){
   .hero{grid-template-columns:1fr}
@@ -122,7 +146,28 @@ footer{text-align:center;color:var(--muted);font-weight:700;margin-top:30px;font
 </style>
 </head>
 <body>
-<div class="wrap">
+
+<!-- Auth Panel (shown when not logged in) -->
+<div id="authPanel" class="auth-panel">
+  <h2>🎤 Kids vs Phonics</h2>
+  <p>Đăng nhập để lưu tiến độ của con trên mọi thiết bị</p>
+  <button class="btn-google" id="btnLogin">
+    <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+    Đăng nhập bằng Google
+  </button>
+</div>
+
+<!-- Main App (shown when logged in) -->
+<div id="mainApp" class="wrap hidden">
+
+  <div class="user-bar">
+    <div class="user-info">
+      <img id="userPhoto" src="" alt="">
+      <span id="userEmail"></span>
+      <span class="sync-status" id="syncStatus"></span>
+    </div>
+    <button class="btn-logout" id="btnLogout">Đăng xuất</button>
+  </div>
 
   <header class="hero">
     <div>
@@ -138,39 +183,44 @@ footer{text-align:center;color:var(--muted);font-weight:700;margin-top:30px;font
 
   <section class="panel" aria-label="Thông tin và tiến độ">
     <div class="who">
-      <label>Student name
+      <label>Tên học sinh
         <input id="name" type="text" autocomplete="off" placeholder="Tên của con">
       </label>
-      <label class="cls">Class
+      <label class="cls">Lớp
         <input id="cls" type="text" autocomplete="off" placeholder="3A5">
       </label>
     </div>
     <div class="stars" id="stars" aria-hidden="true"></div>
     <div class="prog-text">
       <span><span class="big" id="soundsDone">0</span> / 20 âm đã xong cả 4 bước</span>
-      <span><span id="stepsDone">0</span> / 80 bước · <span id="sentDone">0</span> video đã gửi nhóm</span>
+      <span><span id="stepsDone">0</span> / 80 bước · <span id="sentDone">0</span> video đã gửi</span>
     </div>
     <div class="legend">
-      <span style="background:var(--watch-soft);color:var(--watch)">1 👀 Watch – Xem video</span>
-      <span style="background:var(--read-soft);color:var(--read)">2 📖 Read – Đọc theo</span>
-      <span style="background:var(--practice-soft);color:var(--ink)">3 🔁 Practice – Luyện tập</span>
-      <span style="background:var(--record-soft);color:var(--record)">4 🎬 Record – Quay video</span>
+      <span style="background:var(--watch-soft);color:var(--watch)">1 👀 Watch</span>
+      <span style="background:var(--read-soft);color:var(--read)">2 📖 Read</span>
+      <span style="background:var(--practice-soft);color:var(--ink)">3 🔁 Practice</span>
+      <span style="background:var(--record-soft);color:var(--record)">4 🎬 Record</span>
     </div>
   </section>
 
   <details class="info">
-    <summary>Thư gửi ba mẹ và cách làm</summary>
-    <p>Ba mẹ thân mến! ❤️ Thầy Josh và cô Ngọc phát động thử thách <b>Kids vs Phonics – English Speaking Challenge</b>, tạo sân chơi vui vẻ để các con khám phá Phonics and Speaking: phát âm đúng, lên giọng, xuống giọng, nhấn nhá và thể hiện cảm xúc phù hợp khi nói tiếng Anh. 🗣️✨</p>
-    <p><b>4 bước luyện tập mỗi ngày:</b></p>
+    <summary>Hướng dẫn sử dụng</summary>
+    <p><b>4 bước luyện tập mỗi âm:</b></p>
     <ol>
-      <li><b>Watch</b> – Xem video: nghe cách phát âm từ và câu, âm vần và ngữ điệu của giọng đọc mẫu.</li>
-      <li><b>Read</b> – Đọc theo video: bắt chước cách phát âm, nhấn giọng theo ngữ điệu của người nói.</li>
-      <li><b>Practice</b> – Luyện tập: đọc to nhiều lần, điều chỉnh giọng nói và thể hiện cảm xúc phù hợp.</li>
-      <li><b>Record</b> – Ghi hình: quay video đọc lại các từ và câu, phát âm rõ ràng, ngữ điệu tự nhiên, biểu cảm sinh động. 🎬</li>
+      <li><b>Watch</b> – Xem video mẫu trên YouTube</li>
+      <li><b>Read</b> – Đọc theo video</li>
+      <li><b>Practice</b> – Luyện tập nhiều lần</li>
+      <li><b>Record</b> – Quay video của con</li>
     </ol>
-    <p><b>Yêu cầu:</b> hoàn thành 20 video theo bảng dưới đây (mỗi âm có link video luyện tập trên YouTube) và gửi tất cả video lên nhóm lớp.</p>
-    <p class="note-box">💚 Đây là sân chơi luyện nói vui vẻ, không phải cuộc thi. Con không cần nói hoàn hảo ngay từ đầu. Mỗi ngày tự tin và hào hứng hơn một chút là tuyệt vời rồi! 🌈</p>
-    <p><b>Cách dùng trang này:</b> bấm vào từng ô 👀 📖 🔁 🎬 khi con làm xong bước đó. Bấm “Đã gửi nhóm” khi đã gửi video lên nhóm lớp. Tiến độ được lưu trên trình duyệt của máy này.</p>
+    <p><b>Cách dùng:</b></p>
+    <ul>
+      <li>Bấm vào từng ô 👀 📖 🔁 🎬 khi con làm xong bước đó</li>
+      <li>Dán link video YouTube/Drive của con vào ô "Link video"</li>
+      <li>Bấm "Đã gửi nhóm" khi đã chia sẻ video</li>
+      <li>Tiến độ tự động lưu và đồng bộ trên mọi thiết bị</li>
+    </ul>
+    <p class="note-box">💚 Đây là sân chơi vui vẻ, không phải cuộc thi. Mỗi ngày tự tin hơn một chút là tuyệt vời rồi! 🌈</p>
+    <p class="app-box">📱 Ba mẹ có thể tải app về iPad và điện thoại để sử dụng các nguồn học liệu luyện Phonics miễn phí khác tại <a href="https://www.kidsvsphonics.com/" target="_blank" rel="noopener">kidsvsphonics.com</a></p>
   </details>
 
   <div class="toolbar">
@@ -182,12 +232,33 @@ footer{text-align:center;color:var(--muted);font-weight:700;margin-top:30px;font
     <button type="button" class="ghost" id="reset">Xoá toàn bộ tiến độ</button>
   </div>
 
-  <main class="grid" id="grid"></main>
+  <main class="grid" id="grid">
+    <div class="loading">Đang tải dữ liệu...</div>
+  </main>
 
-  <footer>Thầy Josh &amp; cô Ngọc · Kids vs Phonics 2026</footer>
+  <footer>Thầy Josh &amp; cô Ngọc · Kids vs Phonics 2026 · <a href="https://www.kidsvsphonics.com/" target="_blank" rel="noopener">kidsvsphonics.com</a></footer>
 </div>
 
-<script>
+<!-- Firebase SDK -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, signInWithPopup, signOut, onAuthStateChanged, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD6dh9MMTAFkPJddnnKXhgV7TaEBjAJUWM",
+  authDomain: "els-phonics.firebaseapp.com",
+  projectId: "els-phonics",
+  storageBucket: "els-phonics.firebasestorage.app",
+  messagingSenderId: "403213349064",
+  appId: "1:403213349064:web:2b0ea74b3374ff8692b5fd"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
+
 const SOUNDS = [
   ["ai","https://youtu.be/_uyC7jweYj4?si=MuUUkwnhvKhLZ4Yn"],
   ["oa","https://www.youtube.com/watch?v=LIIOWNpY4ro"],
@@ -216,123 +287,269 @@ const STEPS = [
   {k:"practice",ic:"🔁",label:"Practice"},
   {k:"record",ic:"🎬",label:"Record"}
 ];
-const KEY = "kvp-tracker-v1";
+
+let currentUser = null;
 let state = {name:"",cls:"",items:{}};
 let filter = "all";
+let unsubscribe = null;
+let saveTimeout = null;
 
-function load(){
-  try{
-    const raw = localStorage.getItem(KEY);
-    if(raw){ const s = JSON.parse(raw); if(s && typeof s==="object") state = Object.assign(state,s); }
-  }catch(e){}
-  if(!state.items || typeof state.items!=="object") state.items = {};
+const authPanel = document.getElementById("authPanel");
+const mainApp = document.getElementById("mainApp");
+const btnLogin = document.getElementById("btnLogin");
+const btnLogout = document.getElementById("btnLogout");
+const userPhoto = document.getElementById("userPhoto");
+const userEmail = document.getElementById("userEmail");
+const syncStatus = document.getElementById("syncStatus");
+const nameEl = document.getElementById("name");
+const clsEl = document.getElementById("cls");
+
+btnLogin.addEventListener("click", async () => {
+  try {
+    await signInWithPopup(auth, provider);
+  } catch (e) {
+    console.error("Login error:", e);
+    alert("Đăng nhập thất bại. Vui lòng thử lại.");
+  }
+});
+
+btnLogout.addEventListener("click", async () => {
+  if (unsubscribe) unsubscribe();
+  await signOut(auth);
+});
+
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    currentUser = user;
+    userPhoto.src = user.photoURL || "";
+    userEmail.textContent = user.displayName || user.email;
+    authPanel.classList.add("hidden");
+    mainApp.classList.remove("hidden");
+    await loadData();
+    subscribeToChanges();
+  } else {
+    currentUser = null;
+    if (unsubscribe) unsubscribe();
+    authPanel.classList.remove("hidden");
+    mainApp.classList.add("hidden");
+  }
+});
+
+async function loadData() {
+  if (!currentUser) return;
+  try {
+    const docRef = doc(db, "progress", currentUser.uid);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      state = docSnap.data();
+    } else {
+      state = {name:"",cls:"",items:{}};
+    }
+    nameEl.value = state.name || "";
+    clsEl.value = state.cls || "";
+    render();
+    updateProgress();
+    days();
+    showSync("✓ Đã tải");
+  } catch (e) {
+    console.error("Load error:", e);
+    showSync("⚠ Lỗi tải");
+  }
 }
-function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
-function item(i){
-  if(!state.items[i]) state.items[i] = {watch:false,read:false,practice:false,record:false,sent:false,note:""};
+
+function subscribeToChanges() {
+  if (!currentUser) return;
+  const docRef = doc(db, "progress", currentUser.uid);
+  unsubscribe = onSnapshot(docRef, (docSnap) => {
+    if (docSnap.exists()) {
+      const newData = docSnap.data();
+      if (JSON.stringify(newData) !== JSON.stringify(state)) {
+        state = newData;
+        nameEl.value = state.name || "";
+        clsEl.value = state.cls || "";
+        render();
+        updateProgress();
+        showSync("✓ Đồng bộ");
+      }
+    }
+  });
+}
+
+function saveData() {
+  if (!currentUser) return;
+  clearTimeout(saveTimeout);
+  saveTimeout = setTimeout(async () => {
+    try {
+      const docRef = doc(db, "progress", currentUser.uid);
+      await setDoc(docRef, state);
+      showSync("✓ Đã lưu");
+    } catch (e) {
+      console.error("Save error:", e);
+      showSync("⚠ Lỗi lưu");
+    }
+  }, 500);
+}
+
+function showSync(text) {
+  syncStatus.textContent = text;
+  setTimeout(() => { syncStatus.textContent = ""; }, 2000);
+}
+
+function item(i) {
+  if (!state.items) state.items = {};
+  if (!state.items[i]) state.items[i] = {watch:false,read:false,practice:false,record:false,sent:false,videoLink:"",note:""};
   return state.items[i];
 }
-function isComplete(it){ return STEPS.every(s=>it[s.k]); }
 
-function render(){
+function isComplete(it) { return STEPS.every(s => it[s.k]); }
+
+function isValidLink(url) {
+  if (!url) return false;
+  return url.includes("youtube.com") || url.includes("youtu.be") || url.includes("drive.google.com");
+}
+
+function render() {
   const grid = document.getElementById("grid");
   grid.innerHTML = "";
   let shown = 0;
-  SOUNDS.forEach(([snd,url],i)=>{
+
+  SOUNDS.forEach(([snd, url], i) => {
     const it = item(i);
     const done = isComplete(it);
-    if(filter==="done" && !done) return;
-    if(filter==="todo" && done) return;
+    if (filter === "done" && !done) return;
+    if (filter === "todo" && done) return;
     shown++;
+
     const card = document.createElement("article");
-    card.className = "card" + (done?" complete":"");
+    card.className = "card" + (done ? " complete" : "");
+    card.dataset.i = i;
+
+    const hasVideo = isValidLink(it.videoLink);
+
     card.innerHTML = `
       <span class="stamp">Well done! ⭐</span>
       <div class="top">
-        <div class="tile"><span class="sound${snd.length>3?" long":""}">${snd}</span></div>
+        <div class="tile"><span class="sound${snd.length > 3 ? " long" : ""}">${snd}</span></div>
         <div class="meta">
-          <div class="no">Âm số ${i+1}</div>
-          <a href="${url}" target="_blank" rel="noopener">▶ Xem video</a>
+          <div class="no">Âm số ${i + 1}</div>
+          <a href="${url}" target="_blank" rel="noopener">▶ Video mẫu</a>
         </div>
       </div>
       <div class="steps" role="group" aria-label="4 bước cho âm ${snd}">
-        ${STEPS.map((s,n)=>`<button type="button" class="step" data-k="${s.k}" aria-pressed="${it[s.k]}">
-            <span class="ic" aria-hidden="true">${s.ic}</span><span class="n">${n+1}</span>${s.label}</button>`).join("")}
+        ${STEPS.map((s, n) => `<button type="button" class="step" data-k="${s.k}" aria-pressed="${it[s.k]}">
+          <span class="ic" aria-hidden="true">${s.ic}</span><span class="n">${n + 1}</span>${s.label}</button>`).join("")}
       </div>
+      <input type="url" class="video-link" placeholder="Dán link video YouTube/Drive của con" value="${it.videoLink || ""}" aria-label="Link video âm ${snd}">
+      ${hasVideo ? `<div class="video-preview">✓ <a href="${it.videoLink}" target="_blank" rel="noopener">Xem video của con</a></div>` : ""}
       <div class="extra">
-        <button type="button" class="sent" aria-pressed="${it.sent}">${it.sent?"✓ Đã gửi nhóm":"Đã gửi nhóm?"}</button>
+        <button type="button" class="sent" aria-pressed="${it.sent}">${it.sent ? "✓ Đã gửi nhóm" : "Đã gửi nhóm?"}</button>
       </div>
-      <textarea rows="1" placeholder="Ghi chú (ví dụ: con đọc chưa rõ từ “rain”)" aria-label="Ghi chú âm ${snd}"></textarea>`;
-    card.querySelector("textarea").value = it.note || "";
-    card.querySelectorAll(".step").forEach(b=>{
-      b.addEventListener("click",()=>{
+      <textarea rows="1" placeholder="Ghi chú (tuỳ chọn)" aria-label="Ghi chú âm ${snd}">${it.note || ""}</textarea>`;
+
+    card.querySelectorAll(".step").forEach(b => {
+      b.addEventListener("click", () => {
         it[b.dataset.k] = !it[b.dataset.k];
-        save(); render(); updateProgress();
-        const again = document.querySelector(`.card[data-i="${i}"] .step[data-k="${b.dataset.k}"]`);
-        if(again) again.focus();
+        saveData();
+        render();
+        updateProgress();
       });
     });
-    card.querySelector(".sent").addEventListener("click",()=>{
-      it.sent = !it.sent; save(); render(); updateProgress();
-      const again = document.querySelector(`.card[data-i="${i}"] .sent`); if(again) again.focus();
+
+    card.querySelector(".sent").addEventListener("click", () => {
+      it.sent = !it.sent;
+      saveData();
+      render();
+      updateProgress();
     });
-    card.querySelector("textarea").addEventListener("input",e=>{ it.note = e.target.value; save(); });
-    card.dataset.i = i;
+
+    card.querySelector(".video-link").addEventListener("input", e => {
+      it.videoLink = e.target.value;
+      saveData();
+    });
+
+    card.querySelector(".video-link").addEventListener("blur", () => {
+      render();
+    });
+
+    card.querySelector("textarea").addEventListener("input", e => {
+      it.note = e.target.value;
+      saveData();
+    });
+
     grid.appendChild(card);
   });
-  if(!shown){
+
+  if (!shown) {
     const e = document.createElement("div");
     e.className = "empty";
-    e.textContent = filter==="done" ? "Chưa có âm nào xong cả 4 bước. Bắt đầu với âm “ai” nhé! 🚀" : "Con đã hoàn thành cả 20 âm! Tuyệt vời! 🎉";
+    e.textContent = filter === "done"
+      ? "Chưa có âm nào xong cả 4 bước. Bắt đầu với âm "ai" nhé! 🚀"
+      : "Con đã hoàn thành cả 20 âm! Tuyệt vời! 🎉";
     grid.appendChild(e);
   }
 }
 
-function updateProgress(){
-  let sounds=0, steps=0, sent=0;
-  SOUNDS.forEach((_,i)=>{
+function updateProgress() {
+  let sounds = 0, steps = 0, sent = 0;
+  SOUNDS.forEach((_, i) => {
     const it = item(i);
-    if(isComplete(it)) sounds++;
-    STEPS.forEach(s=>{ if(it[s.k]) steps++; });
-    if(it.sent) sent++;
+    if (isComplete(it)) sounds++;
+    STEPS.forEach(s => { if (it[s.k]) steps++; });
+    if (it.sent) sent++;
   });
   document.getElementById("soundsDone").textContent = sounds;
   document.getElementById("stepsDone").textContent = steps;
   document.getElementById("sentDone").textContent = sent;
   const st = document.getElementById("stars");
-  st.innerHTML = SOUNDS.map((_,i)=>`<i class="${i<sounds?"on":""}">${i<sounds?"⭐":""}</i>`).join("");
+  st.innerHTML = SOUNDS.map((_, i) => `<i class="${i < sounds ? "on" : ""}">${i < sounds ? "⭐" : ""}</i>`).join("");
 }
 
-function days(){
-  const end = new Date(2026,10,15,23,59,59);
-  const start = new Date(2026,9,15);
+function days() {
+  const end = new Date(2026, 10, 15, 23, 59, 59);
+  const start = new Date(2026, 9, 15);
   const now = new Date();
-  const el = document.getElementById("daysLeft"), lb = document.getElementById("daysLabel");
-  if(now < start){ el.textContent = Math.ceil((start-now)/864e5); lb.textContent = "ngày nữa bắt đầu"; }
-  else if(now > end){ el.textContent = "🏁"; lb.textContent = "thử thách đã kết thúc"; }
-  else { el.textContent = Math.ceil((end-now)/864e5); lb.textContent = "ngày còn lại"; }
+  const el = document.getElementById("daysLeft");
+  const lb = document.getElementById("daysLabel");
+  if (now < start) {
+    el.textContent = Math.ceil((start - now) / 864e5);
+    lb.textContent = "ngày nữa bắt đầu";
+  } else if (now > end) {
+    el.textContent = "🏁";
+    lb.textContent = "đã kết thúc";
+  } else {
+    el.textContent = Math.ceil((end - now) / 864e5);
+    lb.textContent = "ngày còn lại";
+  }
 }
 
-document.querySelectorAll(".filters button").forEach(b=>{
-  b.addEventListener("click",()=>{
+document.querySelectorAll(".filters button").forEach(b => {
+  b.addEventListener("click", () => {
     filter = b.dataset.f;
-    document.querySelectorAll(".filters button").forEach(x=>x.setAttribute("aria-pressed", x===b));
+    document.querySelectorAll(".filters button").forEach(x => x.setAttribute("aria-pressed", x === b));
     render();
   });
 });
-document.getElementById("reset").addEventListener("click",()=>{
-  if(confirm("Xoá toàn bộ tiến độ và ghi chú của 20 âm?")){
-    state.items = {}; save(); render(); updateProgress();
+
+document.getElementById("reset").addEventListener("click", () => {
+  if (confirm("Xoá toàn bộ tiến độ và ghi chú của 20 âm?")) {
+    state.items = {};
+    saveData();
+    render();
+    updateProgress();
   }
 });
-const nameEl = document.getElementById("name"), clsEl = document.getElementById("cls");
-nameEl.addEventListener("input",()=>{ state.name = nameEl.value; save(); });
-clsEl.addEventListener("input",()=>{ state.cls = clsEl.value; save(); });
 
-load();
-nameEl.value = state.name || "";
-clsEl.value = state.cls || "";
-days(); render(); updateProgress();
+nameEl.addEventListener("input", () => {
+  state.name = nameEl.value;
+  saveData();
+});
+
+clsEl.addEventListener("input", () => {
+  state.cls = clsEl.value;
+  saveData();
+});
+
+days();
 </script>
 </body>
 </html>
