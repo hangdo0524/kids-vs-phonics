@@ -361,13 +361,11 @@ footer{text-align:center;color:var(--muted);font-weight:700;margin-top:30px;font
 </div>
 
 <script type="module">
-console.log("[KVP] Script starting...");
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getFirestore, doc, getDoc, setDoc, collection, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-console.log("[KVP] Firebase imports loaded");
+console.log("[KVP] Script loaded, Firebase imports OK");
 
 const firebaseConfig = {
   apiKey: "AIzaSyD6dh9MMTAFkPJddnnKXhgV7TaEBjAJUWM",
