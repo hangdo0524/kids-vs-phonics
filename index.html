@@ -15,8 +15,6 @@
   --shadow:#B9CDEE;
   color-scheme:light;
   box-sizing:border-box;
-  padding-top:env(safe-area-inset-top,0px);
-  padding-bottom:env(safe-area-inset-bottom,0px);
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
@@ -26,55 +24,62 @@
     --shadow:#0A1026; color-scheme:dark;
   }
 }
-:root[data-theme="dark"]{
-  --bg:#111833; --surface:#1B2447; --ink:#EEF2FF; --muted:#A9B4DA; --line:#2E3A69;
-  --watch:#A795FF; --read:#6FA8FF; --practice:#FFCB45; --record:#FF8A8A; --done:#4CD494;
-  --watch-soft:#2B2660; --read-soft:#1D3462; --practice-soft:#3E3416; --record-soft:#4A2130; --done-soft:#173F33;
-  --shadow:#0A1026; color-scheme:dark;
-}
 *,*::before,*::after{box-sizing:inherit}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.5}
-.wrap{max-width:1080px;margin:0 auto;padding:24px 18px 60px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Nunito",system-ui,sans-serif;font-size:16px;line-height:1.5}
+.wrap{max-width:1100px;margin:0 auto;padding:24px 18px 60px}
 h1,h2,h3,.sound{font-family:"Baloo 2","Nunito",system-ui,sans-serif}
 a{color:var(--read)}
 :focus-visible{outline:3px solid var(--read);outline-offset:2px;border-radius:8px}
+.hidden{display:none!important}
 
-/* Auth */
-.auth-panel{background:var(--surface);border:2px solid var(--line);border-radius:22px;padding:30px;box-shadow:0 6px 0 var(--shadow);text-align:center;max-width:400px;margin:60px auto}
-.auth-panel h2{margin:0 0 10px;font-size:28px}
-.auth-panel p{color:var(--muted);margin:0 0 20px}
+/* Auth & Role Selection */
+.auth-panel,.role-panel{background:var(--surface);border:2px solid var(--line);border-radius:22px;padding:30px;box-shadow:0 6px 0 var(--shadow);text-align:center;max-width:420px;margin:60px auto}
+.auth-panel h2,.role-panel h2{margin:0 0 10px;font-size:28px}
+.auth-panel p,.role-panel p{color:var(--muted);margin:0 0 20px}
 .btn-google{display:inline-flex;align-items:center;gap:10px;font:inherit;font-weight:800;font-size:16px;background:#fff;color:#333;border:2px solid var(--line);border-radius:12px;padding:12px 24px;cursor:pointer;transition:box-shadow .2s}
 .btn-google:hover{box-shadow:0 4px 12px rgba(0,0,0,.15)}
 .btn-google svg{width:20px;height:20px}
+.role-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.role-btn{flex:1;min-width:140px;padding:20px;border:2px solid var(--line);border-radius:16px;background:var(--surface);cursor:pointer;transition:all .2s}
+.role-btn:hover{border-color:var(--read);background:var(--read-soft)}
+.role-btn.selected{border-color:var(--done);background:var(--done-soft)}
+.role-btn .icon{font-size:40px;margin-bottom:8px}
+.role-btn .label{font-weight:800;font-size:18px}
+.role-btn .desc{font-size:13px;color:var(--muted);margin-top:4px}
+.btn-confirm{margin-top:20px;font:inherit;font-weight:800;font-size:16px;background:var(--done);color:#fff;border:none;border-radius:12px;padding:12px 32px;cursor:pointer}
+.btn-confirm:disabled{opacity:.5;cursor:not-allowed}
+
+/* User bar */
 .user-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px;flex-wrap:wrap}
 .user-info{display:flex;align-items:center;gap:10px;font-weight:700}
 .user-info img{width:36px;height:36px;border-radius:50%;border:2px solid var(--line)}
+.user-role{font-size:12px;background:var(--read-soft);color:var(--read);padding:2px 8px;border-radius:999px;font-weight:800}
+.user-role.teacher{background:var(--practice-soft);color:var(--ink)}
 .btn-logout{font:inherit;font-size:14px;font-weight:700;background:transparent;border:2px solid var(--line);color:var(--muted);border-radius:8px;padding:6px 12px;cursor:pointer}
-.btn-logout:hover{border-color:var(--record);color:var(--record)}
+.sync-status{font-size:12px;color:var(--done);font-weight:700;margin-left:8px}
 
 /* Hero */
 .hero{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:end;margin-bottom:22px}
-.hero h1{margin:0;font-size:clamp(34px,7vw,60px);line-height:1;font-weight:800;letter-spacing:-.5px}
-.hero h1 .vs{display:inline-block;background:var(--practice);color:#1B2559;border-radius:14px;padding:0 12px;transform:rotate(-6deg);margin:0 6px;font-size:.7em;vertical-align:middle}
-.hero p.sub{margin:8px 0 0;color:var(--muted);font-weight:700;font-size:18px}
-.dates{background:var(--surface);border:2px solid var(--line);border-radius:18px;padding:12px 16px;text-align:center;min-width:150px}
-.dates b{display:block;font-family:"Baloo 2",sans-serif;font-size:36px;line-height:1;color:var(--record)}
-.dates span{font-size:14px;color:var(--muted);font-weight:700}
+.hero h1{margin:0;font-size:clamp(30px,6vw,50px);line-height:1;font-weight:800}
+.hero h1 .vs{display:inline-block;background:var(--practice);color:#1B2559;border-radius:14px;padding:0 10px;transform:rotate(-6deg);margin:0 4px;font-size:.7em;vertical-align:middle}
+.hero p.sub{margin:8px 0 0;color:var(--muted);font-weight:700;font-size:16px}
+.dates{background:var(--surface);border:2px solid var(--line);border-radius:18px;padding:12px 16px;text-align:center;min-width:140px}
+.dates b{display:block;font-family:"Baloo 2",sans-serif;font-size:32px;line-height:1;color:var(--record)}
+.dates span{font-size:13px;color:var(--muted);font-weight:700}
 
-/* Student + progress */
+/* Panel */
 .panel{background:var(--surface);border:2px solid var(--line);border-radius:22px;padding:18px;box-shadow:0 6px 0 var(--shadow);margin-bottom:22px}
 .who{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:16px}
 .who label{display:flex;flex-direction:column;font-weight:800;font-size:14px;color:var(--muted);flex:1 1 200px}
-.who label.cls{flex:0 1 120px}
-.who input{margin-top:4px;font:inherit;font-weight:700;font-size:18px;color:var(--ink);background:var(--bg);border:2px solid var(--line);border-radius:12px;padding:8px 12px}
+.who label.cls{flex:0 1 150px}
+.who input,.who select{margin-top:4px;font:inherit;font-weight:700;font-size:16px;color:var(--ink);background:var(--bg);border:2px solid var(--line);border-radius:12px;padding:8px 12px}
 .stars{display:grid;grid-template-columns:repeat(20,1fr);gap:4px;margin:6px 0 10px}
-.stars i{aspect-ratio:1;border-radius:50%;background:var(--line);display:grid;place-items:center;font-style:normal;font-size:clamp(9px,2vw,16px);transition:transform .25s}
+.stars i{aspect-ratio:1;border-radius:50%;background:var(--line);display:grid;place-items:center;font-style:normal;font-size:clamp(9px,2vw,14px);transition:transform .25s}
 .stars i.on{background:var(--practice);transform:scale(1.08)}
 .prog-text{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;font-weight:800}
-.prog-text .big{font-family:"Baloo 2",sans-serif;font-size:24px}
-.legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
-.legend span{font-size:14px;font-weight:800;padding:4px 10px;border-radius:999px}
+.prog-text .big{font-family:"Baloo 2",sans-serif;font-size:22px}
+.legend{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.legend span{font-size:13px;font-weight:800;padding:4px 8px;border-radius:999px}
 
 /* Info */
 details.info{background:var(--surface);border:2px solid var(--line);border-radius:18px;padding:4px 16px;margin-bottom:22px}
@@ -92,158 +97,295 @@ details.info[open] summary::before{content:"▾ "}
 /* Toolbar */
 .toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin-bottom:14px}
 .filters{display:flex;gap:6px;flex-wrap:wrap}
-.filters button,.ghost{font:inherit;font-weight:800;border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 14px;cursor:pointer}
+.filters button,.ghost{font:inherit;font-weight:800;border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 14px;cursor:pointer;font-size:14px}
 .filters button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-.ghost{color:var(--muted);font-size:14px}
+.ghost{color:var(--muted);font-size:13px}
 
 /* Cards */
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
 .card{position:relative;background:var(--surface);border:2px solid var(--line);border-radius:22px;padding:14px;box-shadow:0 5px 0 var(--shadow);display:flex;flex-direction:column;gap:10px}
 .card.complete{border-color:var(--done);box-shadow:0 5px 0 var(--done)}
 .top{display:flex;align-items:center;gap:12px}
-.tile{flex:0 0 auto;min-width:72px;height:72px;padding:0 10px;border-radius:16px;background:var(--read-soft);display:grid;place-items:center}
+.tile{flex:0 0 auto;min-width:68px;height:68px;padding:0 8px;border-radius:16px;background:var(--read-soft);display:grid;place-items:center}
 .card.complete .tile{background:var(--done-soft)}
-.sound{font-size:34px;font-weight:800;line-height:1;text-transform:lowercase}
-.sound.long{font-size:24px}
+.sound{font-size:30px;font-weight:800;line-height:1;text-transform:lowercase}
+.sound.long{font-size:22px}
 .meta{min-width:0}
-.meta .no{font-size:13px;font-weight:800;color:var(--muted)}
-.meta a{display:inline-block;margin-top:2px;font-weight:800;text-decoration:none;background:var(--record-soft);color:var(--record);border-radius:999px;padding:3px 10px;font-size:14px}
+.meta .no{font-size:12px;font-weight:800;color:var(--muted)}
+.meta a{display:inline-block;margin-top:2px;font-weight:800;text-decoration:none;background:var(--record-soft);color:var(--record);border-radius:999px;padding:3px 10px;font-size:13px}
 .meta a:hover{text-decoration:underline}
-.stamp{position:absolute;top:-10px;right:-8px;background:var(--done);color:#fff;font-family:"Baloo 2",sans-serif;font-weight:800;border-radius:999px;padding:2px 10px;transform:rotate(8deg);font-size:14px;display:none}
-.card.complete .stamp{display:block;animation:pop .35s ease-out}
-@keyframes pop{0%{transform:rotate(8deg) scale(.3)}80%{transform:rotate(8deg) scale(1.15)}100%{transform:rotate(8deg) scale(1)}}
-.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-.step{font:inherit;cursor:pointer;border:2px solid var(--line);background:var(--bg);color:var(--muted);border-radius:12px;padding:6px 2px;display:flex;flex-direction:column;align-items:center;gap:0;font-weight:800;font-size:12px;line-height:1.2}
-.step .ic{font-size:20px;line-height:1.2;filter:grayscale(1);opacity:.55}
-.step .n{font-size:11px}
+.stamp{position:absolute;top:-10px;right:-8px;background:var(--done);color:#fff;font-family:"Baloo 2",sans-serif;font-weight:800;border-radius:999px;padding:2px 10px;transform:rotate(8deg);font-size:13px;display:none}
+.card.complete .stamp{display:block}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
+.step{font:inherit;cursor:pointer;border:2px solid var(--line);background:var(--bg);color:var(--muted);border-radius:10px;padding:5px 2px;display:flex;flex-direction:column;align-items:center;font-weight:800;font-size:11px;line-height:1.2}
+.step .ic{font-size:18px;filter:grayscale(1);opacity:.55}
 .step[aria-pressed="true"] .ic{filter:none;opacity:1}
 .step[data-k="watch"][aria-pressed="true"]{background:var(--watch-soft);border-color:var(--watch);color:var(--watch)}
 .step[data-k="read"][aria-pressed="true"]{background:var(--read-soft);border-color:var(--read);color:var(--read)}
 .step[data-k="practice"][aria-pressed="true"]{background:var(--practice-soft);border-color:var(--practice);color:var(--ink)}
 .step[data-k="record"][aria-pressed="true"]{background:var(--record-soft);border-color:var(--record);color:var(--record)}
+.video-link{width:100%;font:inherit;font-size:13px;color:var(--ink);background:var(--bg);border:2px solid var(--line);border-radius:10px;padding:6px 10px}
+.video-preview{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--done)}
+.video-preview a{color:var(--read)}
 .extra{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.sent{font:inherit;font-size:13px;font-weight:800;cursor:pointer;border:2px dashed var(--line);background:transparent;color:var(--muted);border-radius:999px;padding:3px 10px}
+.sent{font:inherit;font-size:12px;font-weight:800;cursor:pointer;border:2px dashed var(--line);background:transparent;color:var(--muted);border-radius:999px;padding:3px 10px}
 .sent[aria-pressed="true"]{border-style:solid;border-color:var(--done);background:var(--done-soft);color:var(--done)}
-.video-link{width:100%;font:inherit;font-size:14px;color:var(--ink);background:var(--bg);border:2px solid var(--line);border-radius:12px;padding:6px 10px}
-.video-link::placeholder{color:var(--muted)}
-.video-link:focus{border-color:var(--read)}
-.video-preview{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--done)}
-.video-preview a{color:var(--read);text-decoration:none}
-.video-preview a:hover{text-decoration:underline}
-textarea{width:100%;font:inherit;font-size:14px;color:var(--ink);background:var(--bg);border:2px solid var(--line);border-radius:12px;padding:6px 10px;resize:vertical;min-height:38px}
+textarea{width:100%;font:inherit;font-size:13px;color:var(--ink);background:var(--bg);border:2px solid var(--line);border-radius:10px;padding:6px 10px;resize:vertical;min-height:36px}
+.comment-box{background:var(--practice-soft);border-radius:10px;padding:8px 12px;font-size:13px}
+.comment-box .label{font-weight:800;color:var(--ink);margin-bottom:4px}
+.comment-box .text{color:var(--ink)}
 .empty{grid-column:1/-1;text-align:center;color:var(--muted);font-weight:800;padding:30px}
-footer{text-align:center;color:var(--muted);font-weight:700;margin-top:30px;font-size:14px}
-.hidden{display:none!important}
-.loading{text-align:center;padding:40px;color:var(--muted);font-weight:700}
-.sync-status{font-size:12px;color:var(--done);font-weight:700}
+footer{text-align:center;color:var(--muted);font-weight:700;margin-top:30px;font-size:13px}
+
+/* Teacher Dashboard */
+.dashboard{margin-bottom:22px}
+.dash-header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:16px}
+.dash-header h2{margin:0;font-size:24px}
+.class-select{font:inherit;font-weight:700;font-size:14px;padding:8px 12px;border:2px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink)}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px}
+.stat-card{background:var(--surface);border:2px solid var(--line);border-radius:16px;padding:16px;text-align:center}
+.stat-card .num{font-family:"Baloo 2",sans-serif;font-size:36px;font-weight:800;line-height:1}
+.stat-card .label{font-size:13px;color:var(--muted);font-weight:700}
+.stat-card.green .num{color:var(--done)}
+.stat-card.yellow .num{color:var(--practice)}
+.stat-card.red .num{color:var(--record)}
+.chart-bar{height:24px;background:var(--line);border-radius:12px;overflow:hidden;display:flex;margin-bottom:20px}
+.chart-bar .seg{height:100%;transition:width .3s}
+.chart-bar .seg.done{background:var(--done)}
+.chart-bar .seg.progress{background:var(--practice)}
+.chart-bar .seg.notstart{background:var(--line)}
+.leaderboard{background:var(--surface);border:2px solid var(--line);border-radius:16px;overflow:hidden;margin-bottom:20px}
+.leaderboard-header{background:var(--practice-soft);padding:12px 16px;font-weight:800}
+.leaderboard-row{display:flex;align-items:center;gap:12px;padding:10px 16px;border-top:1px solid var(--line);cursor:pointer}
+.leaderboard-row:hover{background:var(--bg)}
+.leaderboard-row .rank{font-family:"Baloo 2",sans-serif;font-size:20px;font-weight:800;width:30px;text-align:center}
+.leaderboard-row .rank.gold{color:#FFD700}
+.leaderboard-row .rank.silver{color:#C0C0C0}
+.leaderboard-row .rank.bronze{color:#CD7F32}
+.leaderboard-row .name{flex:1;font-weight:700}
+.leaderboard-row .class-tag{font-size:12px;background:var(--line);padding:2px 8px;border-radius:999px}
+.leaderboard-row .progress-mini{font-weight:800;color:var(--done)}
+.student-table{width:100%;border-collapse:collapse;background:var(--surface);border:2px solid var(--line);border-radius:16px;overflow:hidden}
+.student-table th,.student-table td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line)}
+.student-table th{background:var(--bg);font-weight:800;font-size:13px}
+.student-table tr:last-child td{border-bottom:none}
+.student-table tr:hover td{background:var(--bg);cursor:pointer}
+.progress-bar-mini{width:80px;height:8px;background:var(--line);border-radius:4px;overflow:hidden}
+.progress-bar-mini .fill{height:100%;background:var(--done);border-radius:4px}
+.back-btn{font:inherit;font-weight:800;font-size:14px;background:var(--surface);border:2px solid var(--line);border-radius:10px;padding:8px 16px;cursor:pointer;margin-bottom:16px}
+.back-btn:hover{border-color:var(--read)}
+.teacher-comment{margin-top:8px}
+.teacher-comment textarea{min-height:60px;font-size:13px}
+.teacher-comment .btn-save{font:inherit;font-size:12px;font-weight:800;background:var(--done);color:#fff;border:none;border-radius:8px;padding:6px 12px;cursor:pointer;margin-top:6px}
+.manage-classes{margin-bottom:20px}
+.manage-classes h3{margin:0 0 12px;font-size:18px}
+.class-list{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.class-chip{background:var(--surface);border:2px solid var(--line);border-radius:10px;padding:6px 12px;font-weight:700;font-size:14px;display:flex;align-items:center;gap:6px}
+.class-chip .del{cursor:pointer;color:var(--record);font-weight:800}
+.add-class{display:flex;gap:8px}
+.add-class input{flex:1;font:inherit;font-size:14px;padding:8px 12px;border:2px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
+.add-class button{font:inherit;font-size:14px;font-weight:800;background:var(--done);color:#fff;border:none;border-radius:10px;padding:8px 16px;cursor:pointer}
 
 @media (max-width:620px){
   .hero{grid-template-columns:1fr}
   .dates{justify-self:start}
   .stars{grid-template-columns:repeat(10,1fr)}
+  .stats-row{grid-template-columns:repeat(2,1fr)}
 }
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
 
-<!-- Auth Panel (shown when not logged in) -->
+<!-- Auth Panel -->
 <div id="authPanel" class="auth-panel">
   <h2>🎤 Kids vs Phonics</h2>
-  <p>Đăng nhập để lưu tiến độ của con trên mọi thiết bị</p>
+  <p>Đăng nhập để lưu tiến độ trên mọi thiết bị</p>
   <button class="btn-google" id="btnLogin">
     <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
     Đăng nhập bằng Google
   </button>
 </div>
 
-<!-- Main App (shown when logged in) -->
-<div id="mainApp" class="wrap hidden">
+<!-- Role Selection -->
+<div id="rolePanel" class="role-panel hidden">
+  <h2>Bạn là ai?</h2>
+  <p>Chọn vai trò để tiếp tục</p>
+  <div class="role-btns">
+    <div class="role-btn" data-role="parent">
+      <div class="icon">👨‍👩‍👧</div>
+      <div class="label">Phụ huynh</div>
+      <div class="desc">Theo dõi tiến độ của con</div>
+    </div>
+    <div class="role-btn" data-role="teacher">
+      <div class="icon">👩‍🏫</div>
+      <div class="label">Giáo viên</div>
+      <div class="desc">Quản lý lớp học</div>
+    </div>
+  </div>
+  <button class="btn-confirm" id="btnConfirmRole" disabled>Tiếp tục</button>
+</div>
 
+<!-- Parent App -->
+<div id="parentApp" class="wrap hidden">
   <div class="user-bar">
     <div class="user-info">
-      <img id="userPhoto" src="" alt="">
-      <span id="userEmail"></span>
-      <span class="sync-status" id="syncStatus"></span>
+      <img id="parentPhoto" src="" alt="">
+      <span id="parentName"></span>
+      <span class="user-role">Phụ huynh</span>
+      <span class="sync-status" id="parentSync"></span>
     </div>
-    <button class="btn-logout" id="btnLogout">Đăng xuất</button>
+    <button class="btn-logout" id="parentLogout">Đăng xuất</button>
   </div>
 
   <header class="hero">
     <div>
       <h1>Kids<span class="vs">vs</span>Phonics</h1>
-      <p class="sub">English Speaking Challenge 🎤 · Small steps, big progress!</p>
+      <p class="sub">English Speaking Challenge 🎤</p>
     </div>
-    <div class="dates" aria-live="polite">
+    <div class="dates">
       <b id="daysLeft">–</b>
       <span id="daysLabel">ngày còn lại</span><br>
       <span>15/10 – 15/11/2026</span>
     </div>
   </header>
 
-  <section class="panel" aria-label="Thông tin và tiến độ">
+  <section class="panel">
     <div class="who">
       <label>Tên học sinh
-        <input id="name" type="text" autocomplete="off" placeholder="Tên của con">
+        <input id="studentName" type="text" placeholder="Tên của con">
       </label>
       <label class="cls">Lớp
-        <input id="cls" type="text" autocomplete="off" placeholder="3A5">
+        <select id="studentClass"><option value="">Chọn lớp</option></select>
       </label>
     </div>
-    <div class="stars" id="stars" aria-hidden="true"></div>
+    <div class="stars" id="stars"></div>
     <div class="prog-text">
-      <span><span class="big" id="soundsDone">0</span> / 20 âm đã xong cả 4 bước</span>
+      <span><span class="big" id="soundsDone">0</span> / 20 âm đã xong</span>
       <span><span id="stepsDone">0</span> / 80 bước · <span id="sentDone">0</span> video đã gửi</span>
     </div>
     <div class="legend">
-      <span style="background:var(--watch-soft);color:var(--watch)">1 👀 Watch</span>
-      <span style="background:var(--read-soft);color:var(--read)">2 📖 Read</span>
-      <span style="background:var(--practice-soft);color:var(--ink)">3 🔁 Practice</span>
-      <span style="background:var(--record-soft);color:var(--record)">4 🎬 Record</span>
+      <span style="background:var(--watch-soft);color:var(--watch)">👀 Watch</span>
+      <span style="background:var(--read-soft);color:var(--read)">📖 Read</span>
+      <span style="background:var(--practice-soft);color:var(--ink)">🔁 Practice</span>
+      <span style="background:var(--record-soft);color:var(--record)">🎬 Record</span>
     </div>
   </section>
 
   <details class="info">
     <summary>Hướng dẫn sử dụng</summary>
-    <p><b>4 bước luyện tập mỗi âm:</b></p>
     <ol>
-      <li><b>Watch</b> – Xem video mẫu trên YouTube</li>
+      <li><b>Watch</b> – Xem video mẫu</li>
       <li><b>Read</b> – Đọc theo video</li>
       <li><b>Practice</b> – Luyện tập nhiều lần</li>
-      <li><b>Record</b> – Quay video của con</li>
+      <li><b>Record</b> – Quay video của con, dán link YouTube/Drive</li>
     </ol>
-    <p><b>Cách dùng:</b></p>
-    <ul>
-      <li>Bấm vào từng ô 👀 📖 🔁 🎬 khi con làm xong bước đó</li>
-      <li>Dán link video YouTube/Drive của con vào ô "Link video"</li>
-      <li>Bấm "Đã gửi nhóm" khi đã chia sẻ video</li>
-      <li>Tiến độ tự động lưu và đồng bộ trên mọi thiết bị</li>
-    </ul>
-    <p class="note-box">💚 Đây là sân chơi vui vẻ, không phải cuộc thi. Mỗi ngày tự tin hơn một chút là tuyệt vời rồi! 🌈</p>
-    <p class="app-box">📱 Ba mẹ có thể tải app về iPad và điện thoại để sử dụng các nguồn học liệu luyện Phonics miễn phí khác tại <a href="https://www.kidsvsphonics.com/" target="_blank" rel="noopener">kidsvsphonics.com</a></p>
+    <p class="note-box">💚 Đây là sân chơi vui vẻ, không phải cuộc thi!</p>
+    <p class="app-box">📱 Tải app luyện Phonics miễn phí tại <a href="https://www.kidsvsphonics.com/" target="_blank">kidsvsphonics.com</a></p>
   </details>
 
   <div class="toolbar">
-    <div class="filters" role="group" aria-label="Lọc">
+    <div class="filters" id="parentFilters">
       <button type="button" data-f="all" aria-pressed="true">Tất cả</button>
       <button type="button" data-f="todo" aria-pressed="false">Chưa xong</button>
       <button type="button" data-f="done" aria-pressed="false">Đã xong ⭐</button>
     </div>
-    <button type="button" class="ghost" id="reset">Xoá toàn bộ tiến độ</button>
   </div>
 
-  <main class="grid" id="grid">
-    <div class="loading">Đang tải dữ liệu...</div>
-  </main>
-
-  <footer>Thầy Josh &amp; cô Ngọc · Kids vs Phonics 2026 · <a href="https://www.kidsvsphonics.com/" target="_blank" rel="noopener">kidsvsphonics.com</a></footer>
+  <main class="grid" id="parentGrid"></main>
+  <footer>Thầy Josh & cô Ngọc · Kids vs Phonics 2026 · <a href="https://www.kidsvsphonics.com/" target="_blank">kidsvsphonics.com</a></footer>
 </div>
 
-<!-- Firebase SDK -->
+<!-- Teacher App -->
+<div id="teacherApp" class="wrap hidden">
+  <div class="user-bar">
+    <div class="user-info">
+      <img id="teacherPhoto" src="" alt="">
+      <span id="teacherName"></span>
+      <span class="user-role teacher">Giáo viên</span>
+      <span class="sync-status" id="teacherSync"></span>
+    </div>
+    <button class="btn-logout" id="teacherLogout">Đăng xuất</button>
+  </div>
+
+  <!-- Dashboard View -->
+  <div id="dashboardView">
+    <header class="hero">
+      <div>
+        <h1>Kids<span class="vs">vs</span>Phonics</h1>
+        <p class="sub">Dashboard Giáo viên 👩‍🏫</p>
+      </div>
+    </header>
+
+    <div class="manage-classes panel">
+      <h3>Quản lý lớp học</h3>
+      <div class="class-list" id="classList"></div>
+      <div class="add-class">
+        <input type="text" id="newClassName" placeholder="Tên lớp mới (VD: 3A1)">
+        <button id="btnAddClass">Thêm lớp</button>
+      </div>
+    </div>
+
+    <div class="dashboard" id="dashboardContent">
+      <div class="dash-header">
+        <h2>Tiến độ lớp học</h2>
+        <select class="class-select" id="dashClassSelect"><option value="">Tất cả lớp</option></select>
+      </div>
+
+      <div class="stats-row" id="statsRow">
+        <div class="stat-card green"><div class="num" id="statDone">0</div><div class="label">Hoàn thành</div></div>
+        <div class="stat-card yellow"><div class="num" id="statProgress">0</div><div class="label">Đang làm</div></div>
+        <div class="stat-card red"><div class="num" id="statNotStart">0</div><div class="label">Chưa bắt đầu</div></div>
+        <div class="stat-card"><div class="num" id="statTotal">0</div><div class="label">Tổng học sinh</div></div>
+      </div>
+
+      <div class="chart-bar" id="chartBar">
+        <div class="seg done" style="width:0%"></div>
+        <div class="seg progress" style="width:0%"></div>
+        <div class="seg notstart" style="width:100%"></div>
+      </div>
+
+      <div class="leaderboard" id="leaderboard">
+        <div class="leaderboard-header">🏆 Bảng xếp hạng</div>
+      </div>
+
+      <div class="toolbar">
+        <div class="filters" id="teacherFilters">
+          <button type="button" data-f="all" aria-pressed="true">Tất cả</button>
+          <button type="button" data-f="done" aria-pressed="false">Hoàn thành</button>
+          <button type="button" data-f="progress" aria-pressed="false">Đang làm</button>
+          <button type="button" data-f="notstart" aria-pressed="false">Chưa bắt đầu</button>
+        </div>
+      </div>
+
+      <table class="student-table" id="studentTable">
+        <thead><tr><th>Học sinh</th><th>Lớp</th><th>Tiến độ</th><th>Video</th></tr></thead>
+        <tbody id="studentTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Student Detail View -->
+  <div id="studentDetailView" class="hidden">
+    <button class="back-btn" id="btnBackDash">← Quay lại Dashboard</button>
+    <div class="panel">
+      <h2 id="detailStudentName">Học sinh</h2>
+      <p id="detailStudentClass" style="color:var(--muted);margin:0"></p>
+      <div class="stars" id="detailStars" style="margin-top:12px"></div>
+      <div class="prog-text">
+        <span><span class="big" id="detailSoundsDone">0</span> / 20 âm</span>
+        <span><span id="detailStepsDone">0</span> / 80 bước · <span id="detailSentDone">0</span> video</span>
+      </div>
+    </div>
+    <main class="grid" id="detailGrid"></main>
+  </div>
+
+  <footer>Thầy Josh & cô Ngọc · Kids vs Phonics 2026</footer>
+</div>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, collection, getDocs, deleteDoc, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD6dh9MMTAFkPJddnnKXhgV7TaEBjAJUWM",
@@ -260,240 +402,220 @@ const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
 const SOUNDS = [
-  ["ai","https://youtu.be/_uyC7jweYj4?si=MuUUkwnhvKhLZ4Yn"],
-  ["oa","https://www.youtube.com/watch?v=LIIOWNpY4ro"],
-  ["ee","https://www.youtube.com/watch?v=HoS7G1tY-Io"],
-  ["ea","https://www.youtube.com/watch?v=Yc36_Imtiig"],
-  ["oo","https://www.youtube.com/watch?v=p2cshyu82vk"],
-  ["long oo","https://www.youtube.com/watch?v=axwBqTBJIF4"],
-  ["er","https://www.youtube.com/watch?v=xf7b2rO5iIY"],
-  ["or","https://www.youtube.com/watch?v=-48G217E0fQ"],
-  ["ar","https://www.youtube.com/watch?v=FjlEHitDGpg"],
-  ["ie","https://www.youtube.com/watch?v=nF2MaR7_J8Q"],
-  ["oi","https://www.youtube.com/watch?v=01EO7QgWyxU"],
-  ["ue","https://www.youtube.com/watch?v=QxhF1RZdAIc"],
-  ["ph","https://www.youtube.com/watch?v=DXvp4Ybx0W4"],
-  ["ch","https://www.youtube.com/watch?v=xuld36YrFYs"],
-  ["sh","https://www.youtube.com/watch?v=9q-bPLcmPnQ"],
-  ["th","https://www.youtube.com/watch?v=25HeM_ppYDk"],
-  ["ck","https://www.youtube.com/watch?v=bHR6UYef3rc"],
-  ["qu","https://www.youtube.com/watch?v=zsvzy6DoO54"],
-  ["ou","https://www.youtube.com/watch?v=vbPZbZEj7mY"],
-  ["ow","https://www.youtube.com/watch?v=HWIXnIX9yY0"]
+  ["ai","https://youtu.be/_uyC7jweYj4"],["oa","https://www.youtube.com/watch?v=LIIOWNpY4ro"],
+  ["ee","https://www.youtube.com/watch?v=HoS7G1tY-Io"],["ea","https://www.youtube.com/watch?v=Yc36_Imtiig"],
+  ["oo","https://www.youtube.com/watch?v=p2cshyu82vk"],["long oo","https://www.youtube.com/watch?v=axwBqTBJIF4"],
+  ["er","https://www.youtube.com/watch?v=xf7b2rO5iIY"],["or","https://www.youtube.com/watch?v=-48G217E0fQ"],
+  ["ar","https://www.youtube.com/watch?v=FjlEHitDGpg"],["ie","https://www.youtube.com/watch?v=nF2MaR7_J8Q"],
+  ["oi","https://www.youtube.com/watch?v=01EO7QgWyxU"],["ue","https://www.youtube.com/watch?v=QxhF1RZdAIc"],
+  ["ph","https://www.youtube.com/watch?v=DXvp4Ybx0W4"],["ch","https://www.youtube.com/watch?v=xuld36YrFYs"],
+  ["sh","https://www.youtube.com/watch?v=9q-bPLcmPnQ"],["th","https://www.youtube.com/watch?v=25HeM_ppYDk"],
+  ["ck","https://www.youtube.com/watch?v=bHR6UYef3rc"],["qu","https://www.youtube.com/watch?v=zsvzy6DoO54"],
+  ["ou","https://www.youtube.com/watch?v=vbPZbZEj7mY"],["ow","https://www.youtube.com/watch?v=HWIXnIX9yY0"]
 ];
-const STEPS = [
-  {k:"watch",ic:"👀",label:"Watch"},
-  {k:"read",ic:"📖",label:"Read"},
-  {k:"practice",ic:"🔁",label:"Practice"},
-  {k:"record",ic:"🎬",label:"Record"}
-];
+const STEPS = [{k:"watch",ic:"👀",label:"Watch"},{k:"read",ic:"📖",label:"Read"},{k:"practice",ic:"🔁",label:"Practice"},{k:"record",ic:"🎬",label:"Record"}];
 
 let currentUser = null;
-let state = {name:"",cls:"",items:{}};
-let filter = "all";
-let unsubscribe = null;
-let saveTimeout = null;
+let userProfile = null;
+let parentState = {name:"",classId:"",items:{}};
+let classes = [];
+let allStudents = [];
+let parentFilter = "all";
+let teacherFilter = "all";
+let selectedClassId = "";
+let viewingStudent = null;
 
+// DOM
 const authPanel = document.getElementById("authPanel");
-const mainApp = document.getElementById("mainApp");
-const btnLogin = document.getElementById("btnLogin");
-const btnLogout = document.getElementById("btnLogout");
-const userPhoto = document.getElementById("userPhoto");
-const userEmail = document.getElementById("userEmail");
-const syncStatus = document.getElementById("syncStatus");
-const nameEl = document.getElementById("name");
-const clsEl = document.getElementById("cls");
+const rolePanel = document.getElementById("rolePanel");
+const parentApp = document.getElementById("parentApp");
+const teacherApp = document.getElementById("teacherApp");
 
-btnLogin.addEventListener("click", () => {
-  signInWithRedirect(auth, provider);
+// Auth
+document.getElementById("btnLogin").onclick = () => signInWithRedirect(auth, provider);
+getRedirectResult(auth).catch(e => console.log("Redirect:", e.code));
+
+document.querySelectorAll(".btn-logout").forEach(btn => {
+  btn.onclick = async () => { await signOut(auth); location.reload(); };
 });
 
-getRedirectResult(auth).catch(e => {
-  if (e.code !== "auth/redirect-cancelled-by-user") {
-    console.error("Login error:", e);
-  }
+// Role selection
+let selectedRole = null;
+document.querySelectorAll(".role-btn").forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll(".role-btn").forEach(b => b.classList.remove("selected"));
+    btn.classList.add("selected");
+    selectedRole = btn.dataset.role;
+    document.getElementById("btnConfirmRole").disabled = false;
+  };
 });
 
-btnLogout.addEventListener("click", async () => {
-  if (unsubscribe) unsubscribe();
-  await signOut(auth);
-});
+document.getElementById("btnConfirmRole").onclick = async () => {
+  if (!selectedRole || !currentUser) return;
+  userProfile = { role: selectedRole, email: currentUser.email, name: currentUser.displayName };
+  await setDoc(doc(db, "users", currentUser.uid), userProfile);
+  showAppForRole(selectedRole);
+};
 
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     currentUser = user;
-    userPhoto.src = user.photoURL || "";
-    userEmail.textContent = user.displayName || user.email;
-    authPanel.classList.add("hidden");
-    mainApp.classList.remove("hidden");
-    await loadData();
-    subscribeToChanges();
+    const profileDoc = await getDoc(doc(db, "users", user.uid));
+    if (profileDoc.exists()) {
+      userProfile = profileDoc.data();
+      showAppForRole(userProfile.role);
+    } else {
+      hideAll();
+      rolePanel.classList.remove("hidden");
+    }
   } else {
-    currentUser = null;
-    if (unsubscribe) unsubscribe();
+    hideAll();
     authPanel.classList.remove("hidden");
-    mainApp.classList.add("hidden");
   }
 });
 
-async function loadData() {
-  if (!currentUser) return;
-  try {
-    const docRef = doc(db, "progress", currentUser.uid);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      state = docSnap.data();
-    } else {
-      state = {name:"",cls:"",items:{}};
-    }
-    nameEl.value = state.name || "";
-    clsEl.value = state.cls || "";
-    render();
-    updateProgress();
-    days();
-    showSync("✓ Đã tải");
-  } catch (e) {
-    console.error("Load error:", e);
-    showSync("⚠ Lỗi tải");
+function hideAll() {
+  authPanel.classList.add("hidden");
+  rolePanel.classList.add("hidden");
+  parentApp.classList.add("hidden");
+  teacherApp.classList.add("hidden");
+}
+
+function showAppForRole(role) {
+  hideAll();
+  if (role === "teacher") {
+    teacherApp.classList.remove("hidden");
+    document.getElementById("teacherPhoto").src = currentUser.photoURL || "";
+    document.getElementById("teacherName").textContent = currentUser.displayName || currentUser.email;
+    initTeacher();
+  } else {
+    parentApp.classList.remove("hidden");
+    document.getElementById("parentPhoto").src = currentUser.photoURL || "";
+    document.getElementById("parentName").textContent = currentUser.displayName || currentUser.email;
+    initParent();
   }
 }
 
-function subscribeToChanges() {
-  if (!currentUser) return;
-  const docRef = doc(db, "progress", currentUser.uid);
-  unsubscribe = onSnapshot(docRef, (docSnap) => {
-    if (docSnap.exists()) {
-      const newData = docSnap.data();
-      if (JSON.stringify(newData) !== JSON.stringify(state)) {
-        state = newData;
-        nameEl.value = state.name || "";
-        clsEl.value = state.cls || "";
-        render();
-        updateProgress();
-        showSync("✓ Đồng bộ");
-      }
-    }
+// ========== PARENT ==========
+async function initParent() {
+  await loadClasses();
+  await loadParentData();
+  renderClassSelect();
+  renderParentGrid();
+  updateParentProgress();
+  days();
+
+  document.getElementById("studentName").oninput = (e) => { parentState.name = e.target.value; saveParentData(); };
+  document.getElementById("studentClass").onchange = (e) => { parentState.classId = e.target.value; saveParentData(); };
+
+  document.querySelectorAll("#parentFilters button").forEach(btn => {
+    btn.onclick = () => {
+      parentFilter = btn.dataset.f;
+      document.querySelectorAll("#parentFilters button").forEach(b => b.setAttribute("aria-pressed", b === btn));
+      renderParentGrid();
+    };
   });
 }
 
-function saveData() {
+async function loadClasses() {
+  const snap = await getDocs(collection(db, "classes"));
+  classes = [];
+  snap.forEach(d => classes.push({ id: d.id, ...d.data() }));
+}
+
+function renderClassSelect() {
+  const sel = document.getElementById("studentClass");
+  sel.innerHTML = '<option value="">Chọn lớp</option>' + classes.map(c => `<option value="${c.id}">${c.name}</option>`).join("");
+  sel.value = parentState.classId || "";
+}
+
+async function loadParentData() {
   if (!currentUser) return;
-  clearTimeout(saveTimeout);
-  saveTimeout = setTimeout(async () => {
-    try {
-      const docRef = doc(db, "progress", currentUser.uid);
-      await setDoc(docRef, state);
-      showSync("✓ Đã lưu");
-    } catch (e) {
-      console.error("Save error:", e);
-      showSync("⚠ Lỗi lưu");
-    }
+  const docSnap = await getDoc(doc(db, "progress", currentUser.uid));
+  if (docSnap.exists()) parentState = docSnap.data();
+  document.getElementById("studentName").value = parentState.name || "";
+  document.getElementById("studentClass").value = parentState.classId || "";
+}
+
+let parentSaveTimeout;
+function saveParentData() {
+  clearTimeout(parentSaveTimeout);
+  parentSaveTimeout = setTimeout(async () => {
+    await setDoc(doc(db, "progress", currentUser.uid), parentState);
+    showSync("parentSync", "✓ Đã lưu");
   }, 500);
 }
 
-function showSync(text) {
-  syncStatus.textContent = text;
-  setTimeout(() => { syncStatus.textContent = ""; }, 2000);
+function showSync(id, text) {
+  const el = document.getElementById(id);
+  el.textContent = text;
+  setTimeout(() => el.textContent = "", 2000);
 }
 
-function item(i) {
-  if (!state.items) state.items = {};
-  if (!state.items[i]) state.items[i] = {watch:false,read:false,practice:false,record:false,sent:false,videoLink:"",note:""};
-  return state.items[i];
+function parentItem(i) {
+  if (!parentState.items) parentState.items = {};
+  if (!parentState.items[i]) parentState.items[i] = {watch:false,read:false,practice:false,record:false,sent:false,videoLink:"",note:"",comment:""};
+  return parentState.items[i];
 }
 
 function isComplete(it) { return STEPS.every(s => it[s.k]); }
+function isValidLink(url) { return url && (url.includes("youtube") || url.includes("youtu.be") || url.includes("drive.google")); }
 
-function isValidLink(url) {
-  if (!url) return false;
-  return url.includes("youtube.com") || url.includes("youtu.be") || url.includes("drive.google.com");
-}
-
-function render() {
-  const grid = document.getElementById("grid");
+function renderParentGrid() {
+  const grid = document.getElementById("parentGrid");
   grid.innerHTML = "";
   let shown = 0;
 
   SOUNDS.forEach(([snd, url], i) => {
-    const it = item(i);
+    const it = parentItem(i);
     const done = isComplete(it);
-    if (filter === "done" && !done) return;
-    if (filter === "todo" && done) return;
+    if (parentFilter === "done" && !done) return;
+    if (parentFilter === "todo" && done) return;
     shown++;
 
     const card = document.createElement("article");
     card.className = "card" + (done ? " complete" : "");
-    card.dataset.i = i;
-
     const hasVideo = isValidLink(it.videoLink);
 
     card.innerHTML = `
-      <span class="stamp">Well done! ⭐</span>
+      <span class="stamp">⭐</span>
       <div class="top">
         <div class="tile"><span class="sound${snd.length > 3 ? " long" : ""}">${snd}</span></div>
         <div class="meta">
-          <div class="no">Âm số ${i + 1}</div>
-          <a href="${url}" target="_blank" rel="noopener">▶ Video mẫu</a>
+          <div class="no">Âm ${i + 1}</div>
+          <a href="${url}" target="_blank">▶ Video mẫu</a>
         </div>
       </div>
-      <div class="steps" role="group" aria-label="4 bước cho âm ${snd}">
-        ${STEPS.map((s, n) => `<button type="button" class="step" data-k="${s.k}" aria-pressed="${it[s.k]}">
-          <span class="ic" aria-hidden="true">${s.ic}</span><span class="n">${n + 1}</span>${s.label}</button>`).join("")}
+      <div class="steps">
+        ${STEPS.map(s => `<button class="step" data-k="${s.k}" aria-pressed="${it[s.k]}"><span class="ic">${s.ic}</span>${s.label}</button>`).join("")}
       </div>
-      <input type="url" class="video-link" placeholder="Dán link video YouTube/Drive của con" value="${it.videoLink || ""}" aria-label="Link video âm ${snd}">
-      ${hasVideo ? `<div class="video-preview">✓ <a href="${it.videoLink}" target="_blank" rel="noopener">Xem video của con</a></div>` : ""}
+      <input type="url" class="video-link" placeholder="Link video YouTube/Drive của con" value="${it.videoLink || ""}">
+      ${hasVideo ? `<div class="video-preview">✓ <a href="${it.videoLink}" target="_blank">Xem video</a></div>` : ""}
       <div class="extra">
-        <button type="button" class="sent" aria-pressed="${it.sent}">${it.sent ? "✓ Đã gửi nhóm" : "Đã gửi nhóm?"}</button>
+        <button class="sent" aria-pressed="${it.sent}">${it.sent ? "✓ Đã gửi" : "Đã gửi nhóm?"}</button>
       </div>
-      <textarea rows="1" placeholder="Ghi chú (tuỳ chọn)" aria-label="Ghi chú âm ${snd}">${it.note || ""}</textarea>`;
+      ${it.comment ? `<div class="comment-box"><div class="label">💬 Nhận xét của cô:</div><div class="text">${it.comment}</div></div>` : ""}
+    `;
 
     card.querySelectorAll(".step").forEach(b => {
-      b.addEventListener("click", () => {
-        it[b.dataset.k] = !it[b.dataset.k];
-        saveData();
-        render();
-        updateProgress();
-      });
+      b.onclick = () => { it[b.dataset.k] = !it[b.dataset.k]; saveParentData(); renderParentGrid(); updateParentProgress(); };
     });
-
-    card.querySelector(".sent").addEventListener("click", () => {
-      it.sent = !it.sent;
-      saveData();
-      render();
-      updateProgress();
-    });
-
-    card.querySelector(".video-link").addEventListener("input", e => {
-      it.videoLink = e.target.value;
-      saveData();
-    });
-
-    card.querySelector(".video-link").addEventListener("blur", () => {
-      render();
-    });
-
-    card.querySelector("textarea").addEventListener("input", e => {
-      it.note = e.target.value;
-      saveData();
-    });
+    card.querySelector(".sent").onclick = () => { it.sent = !it.sent; saveParentData(); renderParentGrid(); updateParentProgress(); };
+    card.querySelector(".video-link").oninput = (e) => { it.videoLink = e.target.value; saveParentData(); };
+    card.querySelector(".video-link").onblur = () => renderParentGrid();
 
     grid.appendChild(card);
   });
 
   if (!shown) {
-    const e = document.createElement("div");
-    e.className = "empty";
-    e.textContent = filter === "done"
-      ? 'Chưa có âm nào xong cả 4 bước. Bắt đầu với âm "ai" nhé! 🚀'
-      : "Con đã hoàn thành cả 20 âm! Tuyệt vời! 🎉";
-    grid.appendChild(e);
+    grid.innerHTML = `<div class="empty">${parentFilter === "done" ? 'Bắt đầu với âm "ai" nhé! 🚀' : "Hoàn thành cả 20 âm! 🎉"}</div>`;
   }
 }
 
-function updateProgress() {
+function updateParentProgress() {
   let sounds = 0, steps = 0, sent = 0;
   SOUNDS.forEach((_, i) => {
-    const it = item(i);
+    const it = parentItem(i);
     if (isComplete(it)) sounds++;
     STEPS.forEach(s => { if (it[s.k]) steps++; });
     if (it.sent) sent++;
@@ -501,54 +623,231 @@ function updateProgress() {
   document.getElementById("soundsDone").textContent = sounds;
   document.getElementById("stepsDone").textContent = steps;
   document.getElementById("sentDone").textContent = sent;
-  const st = document.getElementById("stars");
-  st.innerHTML = SOUNDS.map((_, i) => `<i class="${i < sounds ? "on" : ""}">${i < sounds ? "⭐" : ""}</i>`).join("");
+  document.getElementById("stars").innerHTML = SOUNDS.map((_, i) => `<i class="${i < sounds ? "on" : ""}">${i < sounds ? "⭐" : ""}</i>`).join("");
 }
 
 function days() {
-  const end = new Date(2026, 10, 15, 23, 59, 59);
-  const start = new Date(2026, 9, 15);
-  const now = new Date();
-  const el = document.getElementById("daysLeft");
-  const lb = document.getElementById("daysLabel");
-  if (now < start) {
-    el.textContent = Math.ceil((start - now) / 864e5);
-    lb.textContent = "ngày nữa bắt đầu";
-  } else if (now > end) {
-    el.textContent = "🏁";
-    lb.textContent = "đã kết thúc";
-  } else {
-    el.textContent = Math.ceil((end - now) / 864e5);
-    lb.textContent = "ngày còn lại";
+  const end = new Date(2026, 10, 15, 23, 59, 59), start = new Date(2026, 9, 15), now = new Date();
+  const el = document.getElementById("daysLeft"), lb = document.getElementById("daysLabel");
+  if (now < start) { el.textContent = Math.ceil((start - now) / 864e5); lb.textContent = "ngày nữa bắt đầu"; }
+  else if (now > end) { el.textContent = "🏁"; lb.textContent = "đã kết thúc"; }
+  else { el.textContent = Math.ceil((end - now) / 864e5); lb.textContent = "ngày còn lại"; }
+}
+
+// ========== TEACHER ==========
+async function initTeacher() {
+  await loadClasses();
+  await loadAllStudents();
+  renderTeacherClasses();
+  renderDashboard();
+
+  document.getElementById("btnAddClass").onclick = addNewClass;
+  document.getElementById("dashClassSelect").onchange = (e) => { selectedClassId = e.target.value; renderDashboard(); };
+  document.getElementById("btnBackDash").onclick = () => {
+    document.getElementById("dashboardView").classList.remove("hidden");
+    document.getElementById("studentDetailView").classList.add("hidden");
+    viewingStudent = null;
+  };
+
+  document.querySelectorAll("#teacherFilters button").forEach(btn => {
+    btn.onclick = () => {
+      teacherFilter = btn.dataset.f;
+      document.querySelectorAll("#teacherFilters button").forEach(b => b.setAttribute("aria-pressed", b === btn));
+      renderStudentTable();
+    };
+  });
+}
+
+async function loadAllStudents() {
+  const snap = await getDocs(collection(db, "progress"));
+  allStudents = [];
+  for (const d of snap.docs) {
+    const data = d.data();
+    if (data.name) {
+      const userDoc = await getDoc(doc(db, "users", d.id));
+      const userData = userDoc.exists() ? userDoc.data() : {};
+      if (userData.role !== "teacher") {
+        allStudents.push({ id: d.id, ...data, userRole: userData.role });
+      }
+    }
   }
 }
 
-document.querySelectorAll(".filters button").forEach(b => {
-  b.addEventListener("click", () => {
-    filter = b.dataset.f;
-    document.querySelectorAll(".filters button").forEach(x => x.setAttribute("aria-pressed", x === b));
-    render();
+function renderTeacherClasses() {
+  const list = document.getElementById("classList");
+  list.innerHTML = classes.map(c => `<div class="class-chip">${c.name} <span class="del" data-id="${c.id}">×</span></div>`).join("");
+  list.querySelectorAll(".del").forEach(d => d.onclick = () => deleteClass(d.dataset.id));
+
+  const sel = document.getElementById("dashClassSelect");
+  sel.innerHTML = '<option value="">Tất cả lớp</option>' + classes.map(c => `<option value="${c.id}">${c.name}</option>`).join("");
+}
+
+async function addNewClass() {
+  const input = document.getElementById("newClassName");
+  const name = input.value.trim();
+  if (!name) return;
+  const id = name.toLowerCase().replace(/\s+/g, "-");
+  await setDoc(doc(db, "classes", id), { name, createdBy: currentUser.uid });
+  input.value = "";
+  await loadClasses();
+  renderTeacherClasses();
+  showSync("teacherSync", "✓ Đã thêm lớp");
+}
+
+async function deleteClass(id) {
+  if (!confirm("Xóa lớp này?")) return;
+  await deleteDoc(doc(db, "classes", id));
+  await loadClasses();
+  renderTeacherClasses();
+  renderDashboard();
+}
+
+function getStudentStats(student) {
+  const items = student.items || {};
+  let sounds = 0, steps = 0, sent = 0;
+  SOUNDS.forEach((_, i) => {
+    const it = items[i] || {};
+    if (STEPS.every(s => it[s.k])) sounds++;
+    STEPS.forEach(s => { if (it[s.k]) steps++; });
+    if (it.sent) sent++;
   });
-});
+  return { sounds, steps, sent };
+}
 
-document.getElementById("reset").addEventListener("click", () => {
-  if (confirm("Xoá toàn bộ tiến độ và ghi chú của 20 âm?")) {
-    state.items = {};
-    saveData();
-    render();
-    updateProgress();
+function renderDashboard() {
+  let filtered = selectedClassId ? allStudents.filter(s => s.classId === selectedClassId) : allStudents;
+
+  let done = 0, progress = 0, notstart = 0;
+  filtered.forEach(s => {
+    const stats = getStudentStats(s);
+    if (stats.sounds === 20) done++;
+    else if (stats.steps > 0) progress++;
+    else notstart++;
+  });
+
+  document.getElementById("statDone").textContent = done;
+  document.getElementById("statProgress").textContent = progress;
+  document.getElementById("statNotStart").textContent = notstart;
+  document.getElementById("statTotal").textContent = filtered.length;
+
+  const total = filtered.length || 1;
+  document.querySelector(".chart-bar .done").style.width = (done / total * 100) + "%";
+  document.querySelector(".chart-bar .progress").style.width = (progress / total * 100) + "%";
+  document.querySelector(".chart-bar .notstart").style.width = (notstart / total * 100) + "%";
+
+  // Leaderboard
+  const sorted = [...filtered].sort((a, b) => getStudentStats(b).sounds - getStudentStats(a).sounds).slice(0, 10);
+  const lb = document.getElementById("leaderboard");
+  lb.innerHTML = '<div class="leaderboard-header">🏆 Bảng xếp hạng</div>';
+  sorted.forEach((s, i) => {
+    const stats = getStudentStats(s);
+    const cls = classes.find(c => c.id === s.classId);
+    const rankClass = i === 0 ? "gold" : i === 1 ? "silver" : i === 2 ? "bronze" : "";
+    lb.innerHTML += `<div class="leaderboard-row" data-id="${s.id}">
+      <div class="rank ${rankClass}">${i + 1}</div>
+      <div class="name">${s.name}</div>
+      <div class="class-tag">${cls?.name || "-"}</div>
+      <div class="progress-mini">${stats.sounds}/20</div>
+    </div>`;
+  });
+  lb.querySelectorAll(".leaderboard-row").forEach(row => row.onclick = () => showStudentDetail(row.dataset.id));
+
+  renderStudentTable();
+}
+
+function renderStudentTable() {
+  let filtered = selectedClassId ? allStudents.filter(s => s.classId === selectedClassId) : allStudents;
+
+  if (teacherFilter !== "all") {
+    filtered = filtered.filter(s => {
+      const stats = getStudentStats(s);
+      if (teacherFilter === "done") return stats.sounds === 20;
+      if (teacherFilter === "progress") return stats.steps > 0 && stats.sounds < 20;
+      if (teacherFilter === "notstart") return stats.steps === 0;
+    });
   }
-});
 
-nameEl.addEventListener("input", () => {
-  state.name = nameEl.value;
-  saveData();
-});
+  const tbody = document.getElementById("studentTableBody");
+  tbody.innerHTML = filtered.map(s => {
+    const stats = getStudentStats(s);
+    const cls = classes.find(c => c.id === s.classId);
+    const pct = Math.round(stats.sounds / 20 * 100);
+    return `<tr data-id="${s.id}">
+      <td>${s.name}</td>
+      <td>${cls?.name || "-"}</td>
+      <td><div class="progress-bar-mini"><div class="fill" style="width:${pct}%"></div></div> ${stats.sounds}/20</td>
+      <td>${stats.sent}</td>
+    </tr>`;
+  }).join("");
 
-clsEl.addEventListener("input", () => {
-  state.cls = clsEl.value;
-  saveData();
-});
+  tbody.querySelectorAll("tr").forEach(row => row.onclick = () => showStudentDetail(row.dataset.id));
+}
+
+function showStudentDetail(studentId) {
+  viewingStudent = allStudents.find(s => s.id === studentId);
+  if (!viewingStudent) return;
+
+  document.getElementById("dashboardView").classList.add("hidden");
+  document.getElementById("studentDetailView").classList.remove("hidden");
+
+  const cls = classes.find(c => c.id === viewingStudent.classId);
+  document.getElementById("detailStudentName").textContent = viewingStudent.name;
+  document.getElementById("detailStudentClass").textContent = "Lớp: " + (cls?.name || "-");
+
+  const stats = getStudentStats(viewingStudent);
+  document.getElementById("detailSoundsDone").textContent = stats.sounds;
+  document.getElementById("detailStepsDone").textContent = stats.steps;
+  document.getElementById("detailSentDone").textContent = stats.sent;
+  document.getElementById("detailStars").innerHTML = SOUNDS.map((_, i) => `<i class="${i < stats.sounds ? "on" : ""}">${i < stats.sounds ? "⭐" : ""}</i>`).join("");
+
+  renderDetailGrid();
+}
+
+function renderDetailGrid() {
+  const grid = document.getElementById("detailGrid");
+  grid.innerHTML = "";
+  const items = viewingStudent.items || {};
+
+  SOUNDS.forEach(([snd, url], i) => {
+    const it = items[i] || {};
+    const done = STEPS.every(s => it[s.k]);
+    const hasVideo = isValidLink(it.videoLink);
+
+    const card = document.createElement("article");
+    card.className = "card" + (done ? " complete" : "");
+
+    card.innerHTML = `
+      <span class="stamp">⭐</span>
+      <div class="top">
+        <div class="tile"><span class="sound${snd.length > 3 ? " long" : ""}">${snd}</span></div>
+        <div class="meta">
+          <div class="no">Âm ${i + 1}</div>
+          <a href="${url}" target="_blank">▶ Video mẫu</a>
+        </div>
+      </div>
+      <div class="steps">
+        ${STEPS.map(s => `<button class="step" data-k="${s.k}" aria-pressed="${it[s.k] || false}" disabled><span class="ic">${s.ic}</span>${s.label}</button>`).join("")}
+      </div>
+      ${hasVideo ? `<div class="video-preview">🎬 <a href="${it.videoLink}" target="_blank">Xem video của học sinh</a></div>` : '<div style="color:var(--muted);font-size:13px">Chưa có video</div>'}
+      <div class="teacher-comment">
+        <textarea placeholder="Nhận xét cho video này...">${it.comment || ""}</textarea>
+        <button class="btn-save" data-i="${i}">Lưu nhận xét</button>
+      </div>
+    `;
+
+    card.querySelector(".btn-save").onclick = async (e) => {
+      const idx = e.target.dataset.i;
+      const comment = card.querySelector("textarea").value;
+      if (!viewingStudent.items) viewingStudent.items = {};
+      if (!viewingStudent.items[idx]) viewingStudent.items[idx] = {};
+      viewingStudent.items[idx].comment = comment;
+      await setDoc(doc(db, "progress", viewingStudent.id), viewingStudent);
+      showSync("teacherSync", "✓ Đã lưu nhận xét");
+    };
+
+    grid.appendChild(card);
+  });
+}
 
 days();
 </script>
