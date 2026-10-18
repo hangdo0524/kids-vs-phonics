@@ -393,6 +393,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
+provider.setCustomParameters({ prompt: 'select_account' });
 
 const SOUNDS = [
   ["ai","https://youtu.be/_uyC7jweYj4"],["oa","https://www.youtube.com/watch?v=LIIOWNpY4ro"],
