@@ -439,14 +439,14 @@ btnLogin.onclick = async () => {
   try {
     const result = await signInWithPopup(auth, provider);
     console.log("[Auth] Popup success:", result.user.email);
-    // Save role and profile
+    // Save role and profile immediately
     const profile = { role: selectedRole, email: result.user.email, name: result.user.displayName };
     await setDoc(doc(db, "users", result.user.uid), profile);
     userProfile = profile;
     currentUser = result.user;
     showAppForRole(selectedRole);
   } catch (e) {
-    console.error("[Auth] Popup error:", e);
+    console.error("[Auth] Popup error:", e.code, e.message);
     alert("Login failed: " + e.message);
     btnLogin.textContent = "Sign in with Google";
     btnLogin.disabled = false;
@@ -461,17 +461,19 @@ document.querySelectorAll(".btn-logout").forEach(btn => {
   };
 });
 
-// Check if user is already logged in (from previous session)
+// Check auth state for returning users (already logged in from previous session)
 onAuthStateChanged(auth, async (user) => {
   console.log("[Auth] onAuthStateChanged:", user ? user.email : "no user");
 
   if (user) {
     currentUser = user;
+    if (userProfile) return; // Already handled via popup login
+
     try {
       const profileDoc = await getDoc(doc(db, "users", user.uid));
       if (profileDoc.exists()) {
         userProfile = profileDoc.data();
-        console.log("[Auth] Existing user, role:", userProfile.role);
+        console.log("[Auth] Returning user, role:", userProfile.role);
         showAppForRole(userProfile.role);
       } else {
         console.log("[Auth] User exists but no profile, show role panel");
@@ -673,17 +675,25 @@ async function initTeacher() {
 
 async function loadAllStudents() {
   const snap = await getDocs(collection(db, "progress"));
+  const seenEmails = new Set();
   allStudents = [];
+
   for (const d of snap.docs) {
     const data = d.data();
     if (data.name) {
       const userDoc = await getDoc(doc(db, "users", d.id));
       const userData = userDoc.exists() ? userDoc.data() : {};
-      if (userData.role !== "teacher") {
-        allStudents.push({ id: d.id, ...data, userRole: userData.role });
-      }
+
+      // Skip teachers and duplicates (by email)
+      if (userData.role === "teacher") continue;
+      if (userData.email && seenEmails.has(userData.email)) continue;
+
+      if (userData.email) seenEmails.add(userData.email);
+      allStudents.push({ id: d.id, ...data, email: userData.email, userRole: userData.role });
     }
   }
+
+  console.log("[Teacher] Loaded students:", allStudents.length);
 }
 
 function renderTeacherClasses() {
