@@ -168,7 +168,13 @@ footer{text-align:center;color:var(--muted);font-weight:700;margin-top:30px;font
 .back-btn:hover{border-color:var(--read)}
 .teacher-comment{margin-top:8px}
 .teacher-comment textarea{min-height:60px;font-size:13px}
-.teacher-comment .btn-save{font:inherit;font-size:12px;font-weight:800;background:var(--done);color:#fff;border:none;border-radius:8px;padding:6px 12px;cursor:pointer;margin-top:6px}
+.teacher-comment .comment-display{background:var(--done-soft);border-radius:10px;padding:10px 12px;margin-bottom:8px}
+.teacher-comment .comment-display .label{font-weight:800;font-size:12px;color:var(--done);margin-bottom:4px}
+.teacher-comment .comment-display .text{font-size:13px;color:var(--ink)}
+.teacher-comment .comment-actions{display:flex;gap:8px;margin-top:6px}
+.teacher-comment .btn-save{font:inherit;font-size:12px;font-weight:800;background:var(--done);color:#fff;border:none;border-radius:8px;padding:6px 12px;cursor:pointer}
+.teacher-comment .btn-edit-comment{font:inherit;font-size:12px;font-weight:800;background:var(--read-soft);color:var(--read);border:2px solid var(--read);border-radius:8px;padding:4px 10px;cursor:pointer}
+.teacher-comment .btn-cancel-edit{font:inherit;font-size:12px;font-weight:800;background:var(--surface);color:var(--muted);border:2px solid var(--line);border-radius:8px;padding:4px 10px;cursor:pointer}
 .manage-classes{margin-bottom:20px}
 .manage-classes h3{margin:0 0 12px;font-size:18px}
 .class-list{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
@@ -878,6 +884,9 @@ function showStudentDetail(studentId) {
   renderDetailGrid();
 }
 
+// Track which comments are being edited
+let editingComments = new Set();
+
 function renderDetailGrid() {
   const grid = document.getElementById("detailGrid");
   grid.innerHTML = "";
@@ -905,6 +914,33 @@ function renderDetailGrid() {
       submissionInfo = '<div style="color:var(--muted);font-size:13px">No submission yet</div>';
     }
 
+    const hasComment = !!it.comment;
+    const isEditingComment = editingComments.has(i);
+
+    // Comment section: show read-only if has comment and not editing
+    let commentSection = '';
+    if (hasComment && !isEditingComment) {
+      commentSection = `
+        <div class="teacher-comment">
+          <div class="comment-display">
+            <div class="label">💬 Your comment:</div>
+            <div class="text">${it.comment}</div>
+          </div>
+          <button class="btn-edit-comment" data-i="${i}">✏️ Edit Comment</button>
+        </div>
+      `;
+    } else {
+      commentSection = `
+        <div class="teacher-comment">
+          <textarea placeholder="Write a comment for this submission...">${it.comment || ""}</textarea>
+          <div class="comment-actions">
+            <button class="btn-save" data-i="${i}">Save Comment</button>
+            ${isEditingComment ? `<button class="btn-cancel-edit" data-i="${i}">Cancel</button>` : ''}
+          </div>
+        </div>
+      `;
+    }
+
     card.innerHTML = `
       <span class="stamp">⭐</span>
       <div class="top">
@@ -918,43 +954,51 @@ function renderDetailGrid() {
         ${STEPS.map(s => `<button class="step" data-k="${s.k}" aria-pressed="${it[s.k] || false}" disabled><span class="ic">${s.ic}</span>${s.label}</button>`).join("")}
       </div>
       ${submissionInfo}
-      <div class="teacher-comment">
-        <textarea placeholder="Write a comment for this submission...">${it.comment || ""}</textarea>
-        <button class="btn-save" data-i="${i}">Save Comment</button>
-      </div>
+      ${commentSection}
     `;
 
-    card.querySelector(".btn-save").onclick = async (e) => {
-      const btn = e.target;
-      const idx = btn.dataset.i;
-      const comment = card.querySelector("textarea").value;
+    // Edit comment button
+    const editCommentBtn = card.querySelector(".btn-edit-comment");
+    if (editCommentBtn) {
+      editCommentBtn.onclick = () => { editingComments.add(i); renderDetailGrid(); };
+    }
 
-      btn.textContent = "Saving...";
-      btn.disabled = true;
+    // Cancel edit button
+    const cancelBtn = card.querySelector(".btn-cancel-edit");
+    if (cancelBtn) {
+      cancelBtn.onclick = () => { editingComments.delete(i); renderDetailGrid(); };
+    }
 
-      try {
-        if (!viewingStudent.items) viewingStudent.items = {};
-        if (!viewingStudent.items[idx]) viewingStudent.items[idx] = {};
-        viewingStudent.items[idx].comment = comment;
-        await setDoc(doc(db, "progress", viewingStudent.id), viewingStudent);
+    // Save button
+    const saveBtn = card.querySelector(".btn-save");
+    if (saveBtn) {
+      saveBtn.onclick = async (e) => {
+        const btn = e.target;
+        const idx = btn.dataset.i;
+        const comment = card.querySelector("textarea").value;
 
-        btn.textContent = "✓ Saved!";
-        btn.style.background = "var(--done)";
-        setTimeout(() => {
-          btn.textContent = "Save Comment";
-          btn.style.background = "";
-          btn.disabled = false;
-        }, 2000);
-      } catch (err) {
-        btn.textContent = "Error!";
-        btn.style.background = "var(--record)";
-        setTimeout(() => {
-          btn.textContent = "Save Comment";
-          btn.style.background = "";
-          btn.disabled = false;
-        }, 2000);
-      }
-    };
+        btn.textContent = "Saving...";
+        btn.disabled = true;
+
+        try {
+          if (!viewingStudent.items) viewingStudent.items = {};
+          if (!viewingStudent.items[idx]) viewingStudent.items[idx] = {};
+          viewingStudent.items[idx].comment = comment;
+          await setDoc(doc(db, "progress", viewingStudent.id), viewingStudent);
+
+          editingComments.delete(parseInt(idx));
+          renderDetailGrid();
+        } catch (err) {
+          btn.textContent = "Error!";
+          btn.style.background = "var(--record)";
+          setTimeout(() => {
+            btn.textContent = "Save Comment";
+            btn.style.background = "";
+            btn.disabled = false;
+          }, 2000);
+        }
+      };
+    }
 
     grid.appendChild(card);
   });
