@@ -95,6 +95,10 @@ details.info[open] summary::before{content:"▾ "}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
 .card{position:relative;background:var(--surface);border:2px solid var(--line);border-radius:22px;padding:14px;box-shadow:0 5px 0 var(--shadow);display:flex;flex-direction:column;gap:10px}
 .card.complete{border-color:var(--done);box-shadow:0 5px 0 var(--done)}
+.card.reviewed{border-color:var(--read);box-shadow:0 5px 0 var(--read)}
+.card.reviewed .stamp{background:var(--read)}
+.card.reviewed .tile{background:var(--read-soft)}
+.reviewed-badge{position:absolute;top:-8px;left:10px;background:var(--read);color:#fff;font-size:11px;font-weight:800;padding:2px 8px;border-radius:999px}
 .top{display:flex;align-items:center;gap:12px}
 .tile{flex:0 0 auto;min-width:68px;height:68px;padding:0 8px;border-radius:16px;background:var(--read-soft);display:grid;place-items:center}
 .card.complete .tile{background:var(--done-soft)}
@@ -278,7 +282,8 @@ footer{text-align:center;color:var(--muted);font-weight:700;margin-top:30px;font
     <div class="filters" id="parentFilters">
       <button type="button" data-f="all" aria-pressed="true">All</button>
       <button type="button" data-f="todo" aria-pressed="false">In Progress</button>
-      <button type="button" data-f="done" aria-pressed="false">Completed ⭐</button>
+      <button type="button" data-f="done" aria-pressed="false">Done ⭐</button>
+      <button type="button" data-f="reviewed" aria-pressed="false">Reviewed ✓</button>
     </div>
   </div>
 
@@ -364,6 +369,14 @@ footer{text-align:center;color:var(--muted);font-weight:700;margin-top:30px;font
         <span><span id="detailStepsDone">0</span> / 80 steps · <span id="detailSentDone">0</span> videos</span>
       </div>
     </div>
+    <div class="toolbar">
+      <div class="filters" id="detailFilters">
+        <button type="button" data-f="all" aria-pressed="true">All</button>
+        <button type="button" data-f="todo" aria-pressed="false">In Progress</button>
+        <button type="button" data-f="done" aria-pressed="false">Done</button>
+        <button type="button" data-f="reviewed" aria-pressed="false">Reviewed ✓</button>
+      </div>
+    </div>
     <main class="grid" id="detailGrid"></main>
   </div>
 
@@ -421,6 +434,7 @@ let classes = [];
 let allStudents = [];
 let parentFilter = "all";
 let teacherFilter = "all";
+let detailFilter = "all";
 let selectedClassId = "";
 let viewingStudent = null;
 
@@ -610,22 +624,26 @@ function renderParentGrid() {
   SOUNDS.forEach(([snd, url], i) => {
     const it = parentItem(i);
     const done = isComplete(it);
-    if (parentFilter === "done" && !done) return;
+    const hasComment = !!it.comment;
+    const reviewed = done && hasComment;
+
+    // Filter logic
+    if (parentFilter === "reviewed" && !reviewed) return;
+    if (parentFilter === "done" && (!done || reviewed)) return; // done but not reviewed
     if (parentFilter === "todo" && done) return;
     shown++;
 
     const card = document.createElement("article");
-    card.className = "card" + (done ? " complete" : "");
+    card.className = "card" + (reviewed ? " complete reviewed" : done ? " complete" : "");
     const hasVideo = isValidLink(it.videoLink);
-    const hasComment = !!it.comment;
     const isLocked = hasComment; // Locked if teacher commented
-    const needsEditBtn = done && hasVideo && !isLocked; // Show edit button if complete with video
+    const needsEditBtn = done && (hasVideo || it.sent) && !isLocked; // Show edit button if complete
     const isEditing = editingCards.has(i);
     const canEdit = !isLocked && (!needsEditBtn || isEditing);
 
     card.innerHTML = `
-      <span class="stamp">⭐</span>
-      ${isLocked ? '<div class="locked-badge">🔒 Reviewed</div>' : ''}
+      <span class="stamp">${reviewed ? '✓' : '⭐'}</span>
+      ${reviewed ? '<div class="reviewed-badge">✓ Reviewed</div>' : ''}
       <div class="top">
         <div class="tile"><span class="sound${snd.length > 3 ? " long" : ""}">${snd}</span></div>
         <div class="meta">
@@ -674,7 +692,10 @@ function renderParentGrid() {
   });
 
   if (!shown) {
-    grid.innerHTML = `<div class="empty">${parentFilter === "done" ? 'Start with sound "ai"! 🚀' : "All 20 sounds completed! 🎉"}</div>`;
+    const msg = parentFilter === "reviewed" ? "No reviewed items yet - keep going! 📚" :
+                parentFilter === "done" ? "No completed items waiting for review 🚀" :
+                parentFilter === "todo" ? "All items completed! 🎉" : "No items";
+    grid.innerHTML = `<div class="empty">${msg}</div>`;
   }
 }
 
@@ -871,6 +892,10 @@ function showStudentDetail(studentId) {
   document.getElementById("dashboardView").classList.add("hidden");
   document.getElementById("studentDetailView").classList.remove("hidden");
 
+  // Reset filter and editing state
+  detailFilter = "all";
+  editingComments.clear();
+
   const cls = classes.find(c => c.id === viewingStudent.classId);
   document.getElementById("detailStudentName").textContent = viewingStudent.name;
   document.getElementById("detailStudentClass").textContent = "Class: " + (cls?.name || "-");
@@ -880,6 +905,16 @@ function showStudentDetail(studentId) {
   document.getElementById("detailStepsDone").textContent = stats.steps;
   document.getElementById("detailSentDone").textContent = stats.sent;
   document.getElementById("detailStars").innerHTML = SOUNDS.map((_, i) => `<i class="${i < stats.sounds ? "on" : ""}">${i < stats.sounds ? "⭐" : ""}</i>`).join("");
+
+  // Setup detail filters
+  document.querySelectorAll("#detailFilters button").forEach(btn => {
+    btn.setAttribute("aria-pressed", btn.dataset.f === "all");
+    btn.onclick = () => {
+      detailFilter = btn.dataset.f;
+      document.querySelectorAll("#detailFilters button").forEach(b => b.setAttribute("aria-pressed", b === btn));
+      renderDetailGrid();
+    };
+  });
 
   renderDetailGrid();
 }
@@ -891,6 +926,7 @@ function renderDetailGrid() {
   const grid = document.getElementById("detailGrid");
   grid.innerHTML = "";
   const items = viewingStudent.items || {};
+  let shown = 0;
 
   SOUNDS.forEach(([snd, url], i) => {
     const it = items[i] || {};
@@ -898,9 +934,17 @@ function renderDetailGrid() {
     const hasVideo = isValidLink(it.videoLink);
     const hasSent = it.sent;
     const done = stepsComplete && (hasVideo || hasSent);
+    const hasComment = !!it.comment;
+    const reviewed = done && hasComment;
+
+    // Filter logic
+    if (detailFilter === "reviewed" && !reviewed) return;
+    if (detailFilter === "done" && (!done || reviewed)) return;
+    if (detailFilter === "todo" && done) return;
+    shown++;
 
     const card = document.createElement("article");
-    card.className = "card" + (done ? " complete" : "");
+    card.className = "card" + (reviewed ? " complete reviewed" : done ? " complete" : "");
 
     // Determine submission status for teacher
     let submissionInfo = '';
@@ -914,7 +958,6 @@ function renderDetailGrid() {
       submissionInfo = '<div style="color:var(--muted);font-size:13px">No submission yet</div>';
     }
 
-    const hasComment = !!it.comment;
     const isEditingComment = editingComments.has(i);
 
     // Comment section: show read-only if has comment and not editing
@@ -942,7 +985,8 @@ function renderDetailGrid() {
     }
 
     card.innerHTML = `
-      <span class="stamp">⭐</span>
+      <span class="stamp">${reviewed ? '✓' : '⭐'}</span>
+      ${reviewed ? '<div class="reviewed-badge">✓ Reviewed</div>' : ''}
       <div class="top">
         <div class="tile"><span class="sound${snd.length > 3 ? " long" : ""}">${snd}</span></div>
         <div class="meta">
@@ -1002,6 +1046,13 @@ function renderDetailGrid() {
 
     grid.appendChild(card);
   });
+
+  if (!shown) {
+    const msg = detailFilter === "reviewed" ? "No reviewed items yet" :
+                detailFilter === "done" ? "No completed items waiting for review" :
+                detailFilter === "todo" ? "No items in progress" : "No items";
+    grid.innerHTML = `<div class="empty">${msg}</div>`;
+  }
 }
 
 days();
