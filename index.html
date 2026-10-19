@@ -885,11 +885,25 @@ function renderDetailGrid() {
 
   SOUNDS.forEach(([snd, url], i) => {
     const it = items[i] || {};
-    const done = STEPS.every(s => it[s.k]);
+    const stepsComplete = STEPS.every(s => it[s.k]);
     const hasVideo = isValidLink(it.videoLink);
+    const hasSent = it.sent;
+    const done = stepsComplete && (hasVideo || hasSent);
 
     const card = document.createElement("article");
     card.className = "card" + (done ? " complete" : "");
+
+    // Determine submission status for teacher
+    let submissionInfo = '';
+    if (hasVideo && hasSent) {
+      submissionInfo = `<div class="video-preview">🎬 <a href="${it.videoLink}" target="_blank">View video</a> · 📤 Sent to group</div>`;
+    } else if (hasVideo) {
+      submissionInfo = `<div class="video-preview">🎬 <a href="${it.videoLink}" target="_blank">View student's video</a></div>`;
+    } else if (hasSent) {
+      submissionInfo = `<div class="video-preview">📤 Sent to group (check class group for video)</div>`;
+    } else {
+      submissionInfo = '<div style="color:var(--muted);font-size:13px">No submission yet</div>';
+    }
 
     card.innerHTML = `
       <span class="stamp">⭐</span>
@@ -903,9 +917,9 @@ function renderDetailGrid() {
       <div class="steps">
         ${STEPS.map(s => `<button class="step" data-k="${s.k}" aria-pressed="${it[s.k] || false}" disabled><span class="ic">${s.ic}</span>${s.label}</button>`).join("")}
       </div>
-      ${hasVideo ? `<div class="video-preview">🎬 <a href="${it.videoLink}" target="_blank">View student's video</a></div>` : '<div style="color:var(--muted);font-size:13px">No video yet</div>'}
+      ${submissionInfo}
       <div class="teacher-comment">
-        <textarea placeholder="Write a comment for this video...">${it.comment || ""}</textarea>
+        <textarea placeholder="Write a comment for this submission...">${it.comment || ""}</textarea>
         <button class="btn-save" data-i="${i}">Save Comment</button>
       </div>
     `;
