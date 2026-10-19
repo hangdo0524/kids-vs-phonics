@@ -590,7 +590,7 @@ function parentItem(i) {
   return parentState.items[i];
 }
 
-function isComplete(it) { return STEPS.every(s => it[s.k]) && isValidLink(it.videoLink); }
+function isComplete(it) { return STEPS.every(s => it[s.k]) && (isValidLink(it.videoLink) || it.sent); }
 function isValidLink(url) { return url && (url.includes("youtube") || url.includes("youtu.be") || url.includes("drive.google")); }
 
 // Track which cards are in edit mode
