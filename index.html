@@ -120,6 +120,10 @@ details.info[open] summary::before{content:"▾ "}
 .extra{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .sent{font:inherit;font-size:12px;font-weight:800;cursor:pointer;border:2px dashed var(--line);background:transparent;color:var(--muted);border-radius:999px;padding:3px 10px}
 .sent[aria-pressed="true"]{border-style:solid;border-color:var(--done);background:var(--done-soft);color:var(--done)}
+.sent:disabled,.step:disabled{opacity:.6;cursor:not-allowed}
+.locked-badge{position:absolute;top:-8px;left:10px;background:var(--muted);color:#fff;font-size:11px;font-weight:800;padding:2px 8px;border-radius:999px}
+.edit-btn,.done-edit-btn{font:inherit;font-size:12px;font-weight:800;cursor:pointer;border:2px solid var(--read);background:var(--read-soft);color:var(--read);border-radius:999px;padding:3px 10px}
+.done-edit-btn{border-color:var(--done);background:var(--done-soft);color:var(--done)}
 textarea{width:100%;font:inherit;font-size:13px;color:var(--ink);background:var(--bg);border:2px solid var(--line);border-radius:10px;padding:6px 10px;resize:vertical;min-height:36px}
 .comment-box{background:var(--practice-soft);border-radius:10px;padding:8px 12px;font-size:13px}
 .comment-box .label{font-weight:800;color:var(--ink);margin-bottom:4px}
@@ -517,23 +521,32 @@ function showAppForRole(role) {
 
 // ========== PARENT ==========
 async function initParent() {
-  await loadClasses();
-  await loadParentData();
-  renderClassSelect();
-  renderParentGrid();
-  updateParentProgress();
-  days();
+  try {
+    console.log("[Parent] Initializing...");
+    await loadClasses();
+    console.log("[Parent] Classes loaded:", classes.length);
+    await loadParentData();
+    console.log("[Parent] Data loaded:", parentState);
+    renderClassSelect();
+    renderParentGrid();
+    updateParentProgress();
+    days();
+    console.log("[Parent] Init complete");
 
-  document.getElementById("studentName").oninput = (e) => { parentState.name = e.target.value; saveParentData(); };
-  document.getElementById("studentClass").onchange = (e) => { parentState.classId = e.target.value; saveParentData(); };
+    document.getElementById("studentName").oninput = (e) => { parentState.name = e.target.value; saveParentData(); };
+    document.getElementById("studentClass").onchange = (e) => { parentState.classId = e.target.value; saveParentData(); };
 
-  document.querySelectorAll("#parentFilters button").forEach(btn => {
-    btn.onclick = () => {
-      parentFilter = btn.dataset.f;
-      document.querySelectorAll("#parentFilters button").forEach(b => b.setAttribute("aria-pressed", b === btn));
-      renderParentGrid();
-    };
-  });
+    document.querySelectorAll("#parentFilters button").forEach(btn => {
+      btn.onclick = () => {
+        parentFilter = btn.dataset.f;
+        document.querySelectorAll("#parentFilters button").forEach(b => b.setAttribute("aria-pressed", b === btn));
+        renderParentGrid();
+      };
+    });
+  } catch (e) {
+    console.error("[Parent] Init error:", e);
+    alert("Error loading data: " + e.message);
+  }
 }
 
 async function loadClasses() {
@@ -577,8 +590,11 @@ function parentItem(i) {
   return parentState.items[i];
 }
 
-function isComplete(it) { return STEPS.every(s => it[s.k]); }
+function isComplete(it) { return STEPS.every(s => it[s.k]) && isValidLink(it.videoLink); }
 function isValidLink(url) { return url && (url.includes("youtube") || url.includes("youtu.be") || url.includes("drive.google")); }
+
+// Track which cards are in edit mode
+let editingCards = new Set();
 
 function renderParentGrid() {
   const grid = document.getElementById("parentGrid");
@@ -595,9 +611,15 @@ function renderParentGrid() {
     const card = document.createElement("article");
     card.className = "card" + (done ? " complete" : "");
     const hasVideo = isValidLink(it.videoLink);
+    const hasComment = !!it.comment;
+    const isLocked = hasComment; // Locked if teacher commented
+    const needsEditBtn = done && hasVideo && !isLocked; // Show edit button if complete with video
+    const isEditing = editingCards.has(i);
+    const canEdit = !isLocked && (!needsEditBtn || isEditing);
 
     card.innerHTML = `
       <span class="stamp">⭐</span>
+      ${isLocked ? '<div class="locked-badge">🔒 Reviewed</div>' : ''}
       <div class="top">
         <div class="tile"><span class="sound${snd.length > 3 ? " long" : ""}">${snd}</span></div>
         <div class="meta">
@@ -606,22 +628,41 @@ function renderParentGrid() {
         </div>
       </div>
       <div class="steps">
-        ${STEPS.map(s => `<button class="step" data-k="${s.k}" aria-pressed="${it[s.k]}"><span class="ic">${s.ic}</span>${s.label}</button>`).join("")}
+        ${STEPS.map(s => `<button class="step" data-k="${s.k}" aria-pressed="${it[s.k]}" ${!canEdit ? 'disabled' : ''}><span class="ic">${s.ic}</span>${s.label}</button>`).join("")}
       </div>
-      <input type="url" class="video-link" placeholder="Paste YouTube/Drive link" value="${it.videoLink || ""}">
+      ${canEdit ? `<input type="url" class="video-link" placeholder="Paste YouTube/Drive link" value="${it.videoLink || ""}">` : ''}
       ${hasVideo ? `<div class="video-preview">✓ <a href="${it.videoLink}" target="_blank">View video</a></div>` : ""}
       <div class="extra">
-        <button class="sent" aria-pressed="${it.sent}">${it.sent ? "✓ Sent to group" : "Sent to group?"}</button>
+        <button class="sent" aria-pressed="${it.sent}" ${!canEdit ? 'disabled' : ''}>${it.sent ? "✓ Sent to group" : "Sent to group?"}</button>
+        ${needsEditBtn && !isEditing ? `<button class="edit-btn" data-i="${i}">✏️ Edit</button>` : ''}
+        ${isEditing ? `<button class="done-edit-btn" data-i="${i}">✓ Done</button>` : ''}
       </div>
-      ${it.comment ? `<div class="comment-box"><div class="label">💬 Teacher's comment:</div><div class="text">${it.comment}</div></div>` : ""}
+      ${hasComment ? `<div class="comment-box"><div class="label">💬 Teacher's comment:</div><div class="text">${it.comment}</div></div>` : ""}
     `;
 
-    card.querySelectorAll(".step").forEach(b => {
-      b.onclick = () => { it[b.dataset.k] = !it[b.dataset.k]; saveParentData(); renderParentGrid(); updateParentProgress(); };
-    });
-    card.querySelector(".sent").onclick = () => { it.sent = !it.sent; saveParentData(); renderParentGrid(); updateParentProgress(); };
-    card.querySelector(".video-link").oninput = (e) => { it.videoLink = e.target.value; saveParentData(); };
-    card.querySelector(".video-link").onblur = () => renderParentGrid();
+    if (canEdit) {
+      card.querySelectorAll(".step").forEach(b => {
+        b.onclick = () => { it[b.dataset.k] = !it[b.dataset.k]; saveParentData(); renderParentGrid(); updateParentProgress(); };
+      });
+      card.querySelector(".sent").onclick = () => { it.sent = !it.sent; saveParentData(); renderParentGrid(); updateParentProgress(); };
+      const videoInput = card.querySelector(".video-link");
+      if (videoInput) {
+        videoInput.oninput = (e) => { it.videoLink = e.target.value; saveParentData(); };
+        videoInput.onblur = () => renderParentGrid();
+      }
+    }
+
+    // Edit button handler
+    const editBtn = card.querySelector(".edit-btn");
+    if (editBtn) {
+      editBtn.onclick = () => { editingCards.add(i); renderParentGrid(); };
+    }
+
+    // Done editing button handler
+    const doneBtn = card.querySelector(".done-edit-btn");
+    if (doneBtn) {
+      doneBtn.onclick = () => { editingCards.delete(i); renderParentGrid(); };
+    }
 
     grid.appendChild(card);
   });
@@ -655,26 +696,35 @@ function days() {
 
 // ========== TEACHER ==========
 async function initTeacher() {
-  await loadClasses();
-  await loadAllStudents();
-  renderTeacherClasses();
-  renderDashboard();
+  try {
+    console.log("[Teacher] Initializing...");
+    await loadClasses();
+    console.log("[Teacher] Classes loaded:", classes.length);
+    await loadAllStudents();
+    console.log("[Teacher] Students loaded:", allStudents.length);
+    renderTeacherClasses();
+    renderDashboard();
+    console.log("[Teacher] Init complete");
 
-  document.getElementById("btnAddClass").onclick = addNewClass;
-  document.getElementById("dashClassSelect").onchange = (e) => { selectedClassId = e.target.value; renderDashboard(); };
-  document.getElementById("btnBackDash").onclick = () => {
-    document.getElementById("dashboardView").classList.remove("hidden");
-    document.getElementById("studentDetailView").classList.add("hidden");
-    viewingStudent = null;
-  };
-
-  document.querySelectorAll("#teacherFilters button").forEach(btn => {
-    btn.onclick = () => {
-      teacherFilter = btn.dataset.f;
-      document.querySelectorAll("#teacherFilters button").forEach(b => b.setAttribute("aria-pressed", b === btn));
-      renderStudentTable();
+    document.getElementById("btnAddClass").onclick = addNewClass;
+    document.getElementById("dashClassSelect").onchange = (e) => { selectedClassId = e.target.value; renderDashboard(); };
+    document.getElementById("btnBackDash").onclick = () => {
+      document.getElementById("dashboardView").classList.remove("hidden");
+      document.getElementById("studentDetailView").classList.add("hidden");
+      viewingStudent = null;
     };
-  });
+
+    document.querySelectorAll("#teacherFilters button").forEach(btn => {
+      btn.onclick = () => {
+        teacherFilter = btn.dataset.f;
+        document.querySelectorAll("#teacherFilters button").forEach(b => b.setAttribute("aria-pressed", b === btn));
+        renderStudentTable();
+      };
+    });
+  } catch (e) {
+    console.error("[Teacher] Init error:", e);
+    alert("Error loading data: " + e.message);
+  }
 }
 
 async function loadAllStudents() {
