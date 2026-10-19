@@ -161,6 +161,16 @@ footer{text-align:center;color:var(--muted);font-weight:700;margin-top:30px;font
 .leaderboard-row .name{flex:1;font-weight:700}
 .leaderboard-row .class-tag{font-size:12px;background:var(--line);padding:2px 8px;border-radius:999px}
 .leaderboard-row .progress-mini{font-weight:800;color:var(--done)}
+.pending-reviews{background:var(--surface);border:2px solid var(--practice);border-radius:16px;overflow:hidden;margin-bottom:20px}
+.pending-header{background:var(--practice-soft);padding:12px 16px;font-weight:800;color:var(--ink)}
+.pending-list{max-height:300px;overflow-y:auto}
+.pending-item{display:flex;align-items:center;gap:12px;padding:10px 16px;border-top:1px solid var(--line);cursor:pointer}
+.pending-item:hover{background:var(--bg)}
+.pending-item .sound-tag{background:var(--read-soft);color:var(--read);font-weight:800;padding:4px 10px;border-radius:8px;font-size:14px}
+.pending-item .student-name{flex:1;font-weight:700}
+.pending-item .class-tag{font-size:12px;background:var(--line);padding:2px 8px;border-radius:999px}
+.pending-item .submission-type{font-size:12px;color:var(--muted)}
+.pending-empty{padding:20px;text-align:center;color:var(--muted);font-weight:700}
 .student-table{width:100%;border-collapse:collapse;background:var(--surface);border:2px solid var(--line);border-radius:16px;overflow:hidden}
 .student-table th,.student-table td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line)}
 .student-table th{background:var(--bg);font-weight:800;font-size:13px}
@@ -340,6 +350,11 @@ footer{text-align:center;color:var(--muted);font-weight:700;margin-top:30px;font
 
       <div class="leaderboard" id="leaderboard">
         <div class="leaderboard-header">🏆 Leaderboard</div>
+      </div>
+
+      <div class="pending-reviews" id="pendingReviews">
+        <div class="pending-header">📝 Pending Reviews</div>
+        <div class="pending-list" id="pendingList"></div>
       </div>
 
       <div class="toolbar">
@@ -853,6 +868,57 @@ function renderDashboard() {
     </div>`;
   });
   lb.querySelectorAll(".leaderboard-row").forEach(row => row.onclick = () => showStudentDetail(row.dataset.id));
+
+  // Render pending reviews (items that are Done but not Reviewed)
+  const pendingList = document.getElementById("pendingList");
+  const pendingItems = [];
+
+  filtered.forEach(student => {
+    const items = student.items || {};
+    SOUNDS.forEach(([snd], i) => {
+      const it = items[i] || {};
+      const stepsComplete = STEPS.every(s => it[s.k]);
+      const hasSubmission = isValidLink(it.videoLink) || it.sent;
+      const done = stepsComplete && hasSubmission;
+      const hasComment = !!it.comment;
+
+      // Pending = done but no comment
+      if (done && !hasComment) {
+        const cls = classes.find(c => c.id === student.classId);
+        pendingItems.push({
+          studentId: student.id,
+          studentName: student.name,
+          className: cls?.name || "-",
+          soundIndex: i,
+          sound: snd,
+          hasVideo: isValidLink(it.videoLink),
+          hasSent: it.sent,
+          videoLink: it.videoLink
+        });
+      }
+    });
+  });
+
+  if (pendingItems.length === 0) {
+    pendingList.innerHTML = '<div class="pending-empty">✓ No pending reviews</div>';
+  } else {
+    pendingList.innerHTML = pendingItems.slice(0, 20).map(item => `
+      <div class="pending-item" data-id="${item.studentId}">
+        <div class="sound-tag">${item.sound}</div>
+        <div class="student-name">${item.studentName}</div>
+        <div class="class-tag">${item.className}</div>
+        <div class="submission-type">${item.hasVideo ? '🎬 Video' : '📤 Group'}</div>
+      </div>
+    `).join('');
+
+    if (pendingItems.length > 20) {
+      pendingList.innerHTML += `<div class="pending-empty">+ ${pendingItems.length - 20} more...</div>`;
+    }
+  }
+
+  pendingList.querySelectorAll(".pending-item").forEach(item => {
+    item.onclick = () => showStudentDetail(item.dataset.id);
+  });
 
   renderStudentTable();
 }
