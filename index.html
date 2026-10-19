@@ -362,7 +362,7 @@ footer{text-align:center;color:var(--muted);font-weight:700;margin-top:30px;font
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, signInWithPopup, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getAuth, signInWithPopup, signOut, onAuthStateChanged, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getFirestore, doc, getDoc, setDoc, collection, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 console.log("[KVP] Script loaded, Firebase imports OK");
@@ -430,7 +430,7 @@ document.querySelectorAll(".role-btn").forEach(btn => {
   };
 });
 
-// Login: try popup first, fallback to redirect if blocked (mobile)
+// Login with popup
 btnLogin.onclick = async () => {
   if (!selectedRole) return;
   btnLogin.textContent = "Signing in...";
@@ -446,16 +446,14 @@ btnLogin.onclick = async () => {
     showAppForRole(selectedRole);
   } catch (e) {
     console.error("[Auth] Popup error:", e.code);
-    if (e.code === "auth/popup-blocked" || e.code === "auth/popup-closed-by-user") {
-      // Fallback to redirect for mobile
-      console.log("[Auth] Popup blocked, using redirect...");
-      localStorage.setItem("kvp-pending-role", selectedRole);
-      signInWithRedirect(auth, provider);
+    if (e.code === "auth/popup-blocked") {
+      // Show instructions for mobile users
+      alert("Popup bị chặn!\\n\\nVui lòng mở link này trong Safari hoặc Chrome:\\nhttps://els-phonics.web.app\\n\\n(Không mở từ Zalo, Messenger, Facebook)");
     } else {
       alert("Login failed: " + e.message);
-      btnLogin.textContent = "Sign in with Google";
-      btnLogin.disabled = false;
     }
+    btnLogin.textContent = "Sign in with Google";
+    btnLogin.disabled = false;
   }
 };
 
@@ -467,44 +465,15 @@ document.querySelectorAll(".btn-logout").forEach(btn => {
   };
 });
 
-// Handle redirect result (for mobile fallback)
-getRedirectResult(auth).then(async (result) => {
-  if (result && result.user) {
-    console.log("[Auth] Redirect success:", result.user.email);
-    const pendingRole = localStorage.getItem("kvp-pending-role");
-    if (pendingRole) {
-      localStorage.removeItem("kvp-pending-role");
-      const profile = { role: pendingRole, email: result.user.email, name: result.user.displayName };
-      await setDoc(doc(db, "users", result.user.uid), profile);
-      userProfile = profile;
-      currentUser = result.user;
-      showAppForRole(pendingRole);
-    }
-  }
-}).catch(e => console.log("[Auth] Redirect check:", e.code || "no pending redirect"));
-
 // Check auth state for returning users
 onAuthStateChanged(auth, async (user) => {
   console.log("[Auth] onAuthStateChanged:", user ? user.email : "no user");
 
   if (user) {
     currentUser = user;
-    if (userProfile) return; // Already handled via popup/redirect
+    if (userProfile) return; // Already handled via popup
 
     try {
-      // Check for pending role from redirect
-      const pendingRole = localStorage.getItem("kvp-pending-role");
-      if (pendingRole) {
-        console.log("[Auth] Found pending role:", pendingRole);
-        localStorage.removeItem("kvp-pending-role");
-        const profile = { role: pendingRole, email: user.email, name: user.displayName };
-        await setDoc(doc(db, "users", user.uid), profile);
-        userProfile = profile;
-        showAppForRole(pendingRole);
-        return;
-      }
-
-      // Otherwise load from database
       const profileDoc = await getDoc(doc(db, "users", user.uid));
       if (profileDoc.exists()) {
         userProfile = profileDoc.data();
